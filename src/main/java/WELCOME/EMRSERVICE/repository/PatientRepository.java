@@ -1,20 +1,10 @@
 package WELCOME.EMRSERVICE.repository;
 
-import WELCOME.EMRSERVICE.entity.patient.Patient;
+import WELCOME.EMRSERVICE.entity.Patient;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-
 @Repository
-public class PatientRepository {
-    private static final Map<Long, Patient> store = new ConcurrentHashMap<>();
-    private static long sequence = 0L;
-
-    public Patient save(Patient patient){
-        patient.setId(++sequence);
-        store.put(patient.getId(),patient);
-        return patient;
-    }
+public interface PatientRepository extends JpaRepository<Patient, Integer> {
 
 }
