@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patient Registration</title>
+    <script>
+        function showRegisterAlert() {
+            alert("회원가입이 완료되었습니다!");
+        }
+    </script>
+</head>
+<body>
+<h2>Patient Registration</h2>
+<form action="/register" method="post" onsubmit="showRegisterAlert()">
+    <label for="patient_name">이름:</label><br>
+    <input type="text" id="patient_name" name="patient_name" required><br>
+
+    <label for="age">나이:</label><br>
+    <input type="number" id="age" name="age" required><br>
+
+    <label for="gender">성별 :</label><br>
+    <input type="text" id="gender" name="gender" required><br>
+
+    <label for="height">신장 :</label><br>
+    <input type="number" id="height" name="height" required><br>
+
+    <label for="weight">몸무게 :</label><br>
+    <input type="number" id="weight" name="weight" required><br>
+
+    <label for="blood_type">혈액형 :</label><br>
+    <input type="text" id="blood_type" name="blood_type" required><br>
+
+    <label for="patient_login_id">ID:</label><br>
+    <input type="text" id="patient_login_id" name="patient_login_id" required><br>
+
+    <label for="patient_pw">Password:</label><br>
+    <input type="password" id="patient_pw" name="patient_pw" required><br><br>
+    <input type="submit" value="회원가입">
+</form>
+</body>
+</html>
