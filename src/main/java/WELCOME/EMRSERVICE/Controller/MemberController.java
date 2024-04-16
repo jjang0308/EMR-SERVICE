@@ -11,6 +11,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @AllArgsConstructor
@@ -55,6 +56,22 @@ public class MemberController {
         String loginId = ((UserDetails) authentication.getPrincipal()).getUsername();
         memberService.modify( loginId,currentPassword,newPassword, confirmPassword);
         return "redirect:/";
+    }
+
+    @GetMapping("/member/delete")
+    public String delete() {
+        return "/member/delete";
+    }
+    @PostMapping("/member/delete")
+    public String deleteMember(@RequestParam("password") String password, RedirectAttributes redirectAttributes) {
+        try {
+            memberService.deleteMember(password);
+            redirectAttributes.addFlashAttribute("success", "회원 탈퇴가 완료되었습니다.");
+            return "redirect:/member/login";
+        } catch (IllegalArgumentException e) {
+            redirectAttributes.addFlashAttribute("error", e.getMessage());
+            return "redirect:/member/delete"; // 탈퇴 실패 시 다시 탈퇴 페이지로 이동
+        }
     }
 
 
