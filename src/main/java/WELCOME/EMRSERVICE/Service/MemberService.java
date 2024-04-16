@@ -22,7 +22,6 @@ import java.util.Optional;
 @AllArgsConstructor
 public class MemberService implements UserDetailsService {
     private MemberRepository memberRepository;
-
     // 회원가입
     @Transactional
     public String signUp(MemberDto memberDto) {
@@ -52,4 +51,29 @@ public class MemberService implements UserDetailsService {
         // 아이디, 비밀번호, 권한리스트를 매개변수로 User를 만들어 반환해준다.
         return new User(member.getPatientLoginId(), member.getPatient_pw(), authorities);
     }
+
+
+    @Transactional
+    public void modify(String loginId,String currentPassword,String newPassword, String confirmPassword) {
+        if (loginId == null) {
+            throw new IllegalArgumentException("로그인 ID가 null입니다.");
+        }
+        Optional<Member> optionalMember = memberRepository.findByPatientLoginId(loginId);
+        Member member = optionalMember.orElseThrow(() -> new IllegalArgumentException("회원을 찾을 수 없습니다. 로그인 ID: " + loginId));
+
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        if (!passwordEncoder.matches(currentPassword, member.getPatient_pw())) {
+            throw new IllegalArgumentException("현재 비밀번호가 일치하지 않습니다.");
+        }
+
+        String encPassword = passwordEncoder.encode(newPassword);
+        member.modify(encPassword);
+    }
+
+
+
+
+
+
+
 }

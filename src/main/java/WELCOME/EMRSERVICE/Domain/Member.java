@@ -1,16 +1,13 @@
 package WELCOME.EMRSERVICE.Domain;
 
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 @NoArgsConstructor(access= AccessLevel.PROTECTED)
-@Getter
+@Getter @Setter
 @Entity(name = "patient")
 public class Member {
     @Id
@@ -37,6 +34,11 @@ public class Member {
         this.patient_pw = patient_pw;
         this.patientLoginId = patientLoginId;
     }
+
+    public void modify(String patient_pw) {
+        this.patient_pw = patient_pw;
+    }
+
 
 
 }
