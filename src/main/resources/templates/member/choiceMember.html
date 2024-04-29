@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>회원가입</title>
+</head>
+<body>
+<h1>회원가입</h1>
+<hr>
+<form id="userTypeForm" action="/member/signup" method="get">
+    <label>사용자 유형 선택:</label>
+    <input type="radio" id="doctorRadio" name="userType" value="의사">
+    <label for="doctorRadio">의사</label>
+    <input type="radio" id="patientRadio" name="userType" value="고객">
+    <label for="patientRadio">고객</label>
+    <button type="submit">다음</button>
+</form>
+
+<script>
+    document.getElementById("userTypeForm").addEventListener("submit", function(event) {
+        var selectedUserType = document.querySelector('input[name="userType"]:checked').value;
+        if (selectedUserType === "의사") {
+            this.action = "/doctor/signup";
+        }
+    });
+</script>
+</body>
+</html>
