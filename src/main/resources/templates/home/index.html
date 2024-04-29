@@ -9,7 +9,8 @@
 <hr>
 <a sec:authorize="isAnonymous()" th:href="@{/member/login}">로그인</a>
 <a sec:authorize="isAuthenticated()" th:href="@{/member/logout}">로그아웃</a>
-<a sec:authorize="isAnonymous()" th:href="@{/member/signup}">회원가입</a>
+<a sec:authorize="isAnonymous()" th:href="@{/member/choiceMember}">회원가입</a>
 <a sec:authorize="isAuthenticated()" th:href="@{/member/updatePassword}">개인정보 수정</a>
+<a sec:authorize="isAuthenticated()" th:href="@{/member/delete}">회원 탈퇴</a>
 </body>
 </html>
