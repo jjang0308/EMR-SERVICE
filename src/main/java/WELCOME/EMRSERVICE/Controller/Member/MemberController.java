@@ -25,7 +25,7 @@ public class MemberController {
 
     @GetMapping("/member/choiceMember")
     public String choiceMember() {
-        return "member/choiceMember";
+        return "home/choiceMember_signup";
     }
 
     @GetMapping("/member/signup")
@@ -40,7 +40,7 @@ public class MemberController {
         return "redirect:/";
     }
 
-    @GetMapping("/member/login")
+    @PostMapping("/member/login")
     public String login() {
         return "member/loginForm";
     }
