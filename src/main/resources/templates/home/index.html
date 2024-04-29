@@ -7,9 +7,9 @@
 <h1>Simple_Login</h1>
 <h3 sec:authorize="isAuthenticated()">반갑습니다. <span sec:authentication="name"></span>님!</h3>
 <hr>
-<a sec:authorize="isAnonymous()" th:href="@{/member/login}">로그인</a>
+<a sec:authorize="isAnonymous()" th:href="@{/home/loginForm}">로그인</a>
 <a sec:authorize="isAuthenticated()" th:href="@{/member/logout}">로그아웃</a>
-<a sec:authorize="isAnonymous()" th:href="@{/member/choiceMember}">회원가입</a>
+<a sec:authorize="isAnonymous()" th:href="@{/home/choiceMember}">회원가입</a>
 <a sec:authorize="isAuthenticated()" th:href="@{/member/updatePassword}">개인정보 수정</a>
 <a sec:authorize="isAuthenticated()" th:href="@{/member/delete}">회원 탈퇴</a>
 </body>
