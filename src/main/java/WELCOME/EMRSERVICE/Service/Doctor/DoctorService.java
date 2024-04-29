@@ -40,11 +40,11 @@ public class DoctorService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         // 로그인을 하기 위해 가입된 user정보를 조회하는 메서드
         Optional<Doctor> memberWrapper = doctorRepository.findByDoctorLoginId(username);
-        Doctor doctor = memberWrapper.get();
+        Doctor doctor = memberWrapper.orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다: " + username));
 
         List<GrantedAuthority> authorities = new ArrayList<>();
 
-        // 여기서는 간단하게 username이 'admin'이면 admin권한 부여
+
         if("admin".equals(username)){
             authorities.add(new SimpleGrantedAuthority(Role.ADMIN.getValue()));
         } else {
