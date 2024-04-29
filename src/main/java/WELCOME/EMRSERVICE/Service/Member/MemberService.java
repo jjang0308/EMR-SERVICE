@@ -1,8 +1,9 @@
-package WELCOME.EMRSERVICE.Service;
+package WELCOME.EMRSERVICE.Service.Member;
 
-import WELCOME.EMRSERVICE.Domain.Member;
-import WELCOME.EMRSERVICE.Dto.MemberDto;
-import WELCOME.EMRSERVICE.Repository.MemberRepository;
+import WELCOME.EMRSERVICE.Domain.Member.Member;
+import WELCOME.EMRSERVICE.Dto.Member.MemberDto;
+import WELCOME.EMRSERVICE.Repository.Member.MemberRepository;
+import WELCOME.EMRSERVICE.Service.Role;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;

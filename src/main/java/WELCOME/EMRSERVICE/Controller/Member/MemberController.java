@@ -1,7 +1,7 @@
-package WELCOME.EMRSERVICE.Controller;
+package WELCOME.EMRSERVICE.Controller.Member;
 
-import WELCOME.EMRSERVICE.Dto.MemberDto;
-import WELCOME.EMRSERVICE.Service.MemberService;
+import WELCOME.EMRSERVICE.Dto.Member.MemberDto;
+import WELCOME.EMRSERVICE.Service.Member.MemberService;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -21,6 +21,11 @@ public class MemberController {
     @GetMapping("/")
     public String index() {
         return "home/index";
+    }
+
+    @GetMapping("/member/choiceMember")
+    public String choiceMember() {
+        return "member/choiceMember";
     }
 
     @GetMapping("/member/signup")
