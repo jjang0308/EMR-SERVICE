@@ -1,6 +1,6 @@
-package WELCOME.EMRSERVICE.Dto;
+package WELCOME.EMRSERVICE.Dto.Member;
 
-import WELCOME.EMRSERVICE.Domain.Member;
+import WELCOME.EMRSERVICE.Domain.Member.Member;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -47,6 +47,7 @@ public class MemberDto {
         this.patient_login_id = patient_login_id;
 
     }
+
 
 
 }

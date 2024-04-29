@@ -1,9 +1,10 @@
-package WELCOME.EMRSERVICE.Domain;
+package WELCOME.EMRSERVICE.Domain.Member;
 
 import lombok.*;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @NoArgsConstructor(access= AccessLevel.PROTECTED)
@@ -11,7 +12,7 @@ import javax.persistence.Id;
 @Entity(name = "patient")
 public class Member {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long patient_id;
     private String patient_name;
     private String gender;
