@@ -1,0 +1,17 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>SignUp</title>
+</head>
+<body>
+<h1>회원가입</h1>
+<hr>
+<form action="/doctor/signup" th:object="${doctor}" method="post">
+    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+
+    <input type="text" th:field="*{doctor_login_id}" placeholder="아이디입력">
+    <input type="password" th:field="*{doctor_pw}" placeholder="비밀번호">
+    <button type="submit">로그인</button>
+</form>
+</body>
+</html>
