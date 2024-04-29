@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+</head>
+<body>
+<h1>로그인</h1>
+<hr>
+<form id="loginForm" method="post">
+    <input type="hidden" name="_csrf" th:value="${_csrf.token}" />
+
+    <label for="userType">사용자 유형 선택:</label>
+    <select id="userType" name="userType">
+        <option value="doctor">의사</option>
+        <option value="patient">환자</option>
+    </select>
+
+    <input type="text" name="username" placeholder="아이디">
+    <input type="password" name="password" placeholder="비밀번호">
+    <button type="submit">로그인</button>
+</form>
+
+<script>
+    document.getElementById("loginForm").addEventListener("submit", function(event) {
+        var userType = document.getElementById("userType").value;
+        if (userType === "doctor") {
+            this.action = "/doctor/login";
+        } else if (userType === "patient") {
+            this.action = "/member/login";
+        }
+    });
+</script>
+</body>
+</html>
