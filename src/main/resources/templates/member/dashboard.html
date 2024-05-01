@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>환자 대시보드</title>
+</head>
+<body>
+<h1>환자 대시보드</h1>
+<hr>
+
+<h3>반갑습니다, <span sec:authentication="name"></span>님!</h3>
+
+
+<!-- 로그아웃 기능 추가 -->
+<form th:action="@{/member/logout}" method="post">
+    <input type="submit" value="로그아웃">
+</form>
+</body>
+</html>
