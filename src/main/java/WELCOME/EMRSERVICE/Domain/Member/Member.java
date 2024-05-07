@@ -22,9 +22,10 @@ public class Member {
     private String blood_type;
     private String patient_pw;
     private String patientLoginId;
+    private String role;
 
     @Builder
-    public Member(Long patient_id, String patient_name, String gender, int age, int weight, int height, String blood_type, String patient_pw, String patientLoginId) {
+    public Member(Long patient_id, String patient_name, String gender, int age, int weight, int height, String blood_type, String patient_pw, String patientLoginId,String role) {
         this.patient_id = patient_id;
         this.patient_name = patient_name;
         this.gender = gender;
@@ -34,6 +35,7 @@ public class Member {
         this.blood_type = blood_type;
         this.patient_pw = patient_pw;
         this.patientLoginId = patientLoginId;
+        this.role=role;
     }
 
     public void modify(String patient_pw) {
