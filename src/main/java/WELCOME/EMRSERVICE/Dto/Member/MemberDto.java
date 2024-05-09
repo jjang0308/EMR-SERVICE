@@ -18,7 +18,7 @@ public class MemberDto {
     private String blood_type;
     private String patient_pw;
     private String patient_login_id;
-    private String role;
+    private Long role_id;
 
     public Member toEntity() {
         return Member.builder()
@@ -31,12 +31,12 @@ public class MemberDto {
                 .blood_type(blood_type)
                 .patient_pw(patient_pw)
                 .patientLoginId(patient_login_id)
-                .role(role)
+                .role_id(role_id)
                 .build();
     }
 
     @Builder
-    public MemberDto(Long patient_id, String patient_name, String gender, int age, int height, int weight, String blood_type, String patient_login_id, String patient_pw,String role) {
+    public MemberDto(Long patient_id, String patient_name, String gender, int age, int height, int weight, String blood_type, String patient_login_id, String patient_pw,Long role_id) {
         this.patient_id = patient_id;
         this.patient_name = patient_name;
         this.gender = gender;
@@ -46,7 +46,7 @@ public class MemberDto {
         this.blood_type = blood_type;
         this.patient_pw = patient_pw;
         this.patient_login_id = patient_login_id;
-        this.role=role;
+        this.role_id=role_id;
 
     }
 

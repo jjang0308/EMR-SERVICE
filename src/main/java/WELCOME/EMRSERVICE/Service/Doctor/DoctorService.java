@@ -29,7 +29,7 @@ public class DoctorService implements UserDetailsService {
         doctorDto.setDoctor_pw(passwordEncoder.encode(doctorDto.getDoctor_pw()));
 
         // 사용자가 의사일 경우 ROLE_DOCTOR 권한 부여
-        doctorDto.setRole("ROLE_DOCTOR");
+        doctorDto.setRole_id(Long.valueOf("3"));
 
         Doctor doctor = doctorDto.toEntity();
         doctorRepository.save(doctor);
