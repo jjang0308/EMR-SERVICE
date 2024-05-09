@@ -31,7 +31,7 @@ public class MemberService implements UserDetailsService {
         memberDto.setPatient_pw(passwordEncoder.encode(memberDto.getPatient_pw()));
 
         // 사용자가 의사일 경우 ROLE_DOCTOR 권한 부여
-        memberDto.setRole("ROLE_MEMBER");
+        memberDto.setRole_id(Long.valueOf("2"));
 
         Member member = memberDto.toEntity();
         memberRepository.save(member);

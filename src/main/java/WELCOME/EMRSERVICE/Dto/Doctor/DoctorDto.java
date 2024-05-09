@@ -14,7 +14,7 @@ public class DoctorDto {
     private String doctor_name;
     private String doctor_login_id;
     private String doctor_pw;
-    private String role;
+    private Long role_id;
 
 
 
@@ -24,17 +24,17 @@ public class DoctorDto {
                 .doctor_name(doctor_name)
                 .doctor_pw(doctor_pw)
                 .doctorLoginId(doctor_login_id)
-                .role(role)
+                .role_id(role_id)
                 .build();
     }
 
     @Builder
-    public DoctorDto(Long doctor_id, String doctor_name, String doctor_login_id, String doctor_pw,String role) {
+    public DoctorDto(Long doctor_id, String doctor_name, String doctor_login_id, String doctor_pw,Long role_id) {
         this.doctor_id = doctor_id;
         this.doctor_name = doctor_name;
         this.doctor_pw = doctor_pw;
         this.doctor_login_id = doctor_login_id;
-        this.role=role;
+        this.role_id=role_id;
 
     }
 
