@@ -11,5 +11,6 @@ public enum Role {
     DOCTOR("ROLE_DOCTOR");
 
     private String value;
+
 }
 
