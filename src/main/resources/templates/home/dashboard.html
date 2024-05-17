@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<!-- 인증된 사용자만 볼 수 있는 로그아웃 링크 -->
+<div sec:authorize="isAuthenticated()">
+    <a th:href="@{/logout}">로그아웃</a>
+</div>
+
+<!-- 의사 권한에 따른 링크 -->
+<div sec:authorize="hasRole('DOCTOR')">
+    <a>의사</a>
+    <a th:href="@{/doctor/updatePassword}">개인정보 수정</a>
+    <a th:href="@{/doctor/delete}">회원 탈퇴</a>
+</div>
+
+<!-- 환자 권한에 따른 링크 -->
+<div sec:authorize="hasRole('MEMBER')">
+    <a>환자</a>
+    <a th:href="@{/member/updatePassword}">개인정보 수정</a>
+    <a th:href="@{/member/delete}">회원 탈퇴</a>
+</div>
+</body>
+</html>
