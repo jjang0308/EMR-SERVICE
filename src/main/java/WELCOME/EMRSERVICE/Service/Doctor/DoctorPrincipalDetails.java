@@ -33,7 +33,7 @@ public class DoctorPrincipalDetails implements UserDetails {
 
     @Override
     public String getUsername() {
-        return null;
+        return doctor.getDoctorLoginId();
     }
 
     @Override
