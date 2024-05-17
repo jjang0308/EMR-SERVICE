@@ -70,12 +70,6 @@ public class DoctorController {
 
     }
 
-
-
-
-
-
-
     @GetMapping("/doctor/updatePassword")
     public String updatePassword(Model model) {
         return "/doctor/updatePassword";
@@ -119,9 +113,9 @@ public class DoctorController {
     @PostMapping("/doctor/delete")
     public String deleteMember(@RequestParam("password") String password, RedirectAttributes redirectAttributes) {
         try {
-//            doctorService.deleteMember(password);
+            doctorService.deleteDoctor(password);
             redirectAttributes.addFlashAttribute("success", "회원 탈퇴가 완료되었습니다.");
-            return "redirect:/member/logout";
+            return "redirect:/logout";
         } catch (IllegalArgumentException e) {
             redirectAttributes.addFlashAttribute("error", e.getMessage());
             return "redirect:/doctor/delete"; // 탈퇴 실패 시 다시 탈퇴 페이지로 이동
