@@ -8,8 +8,10 @@ import WELCOME.EMRSERVICE.Repository.Member.MemberRepository;
 import WELCOME.EMRSERVICE.Service.Doctor.DoctorPrincipalDetails;
 import WELCOME.EMRSERVICE.Service.Role;
 import lombok.AllArgsConstructor;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -88,18 +90,17 @@ public class MemberService implements UserDetailsService {
 
     @Transactional
     public void deleteMember(String password) {
-//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//        String loginId = ((UserDetails) authentication.getPrincipal()).getUsername();
-//
-//        Member member = memberRepository.findByPatientLoginId(loginId)
-//                .orElseThrow(() -> new IllegalArgumentException("회원을 찾을 수 없습니다."));
-//
-//        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-//        if (!passwordEncoder.matches(password, member.getPatient_pw())) {
-//            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
-//        }
-//
-//        memberRepository.delete(member);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String loginId = ((UserDetails) authentication.getPrincipal()).getUsername();
+
+        Member memberEntity = memberRepository.findByPatientLoginId(loginId);
+
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        if (!passwordEncoder.matches(password, memberEntity.getPatient_pw())) {
+            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+        }
+
+        memberRepository.delete(memberEntity);
     }
 
 
