@@ -22,10 +22,11 @@ public class Member {
     private String blood_type;
     private String patient_pw;
     private String patientLoginId;
-    private String role;
+    private Long role_id;
+    private String roles;
 
     @Builder
-    public Member(Long patient_id, String patient_name, String gender, int age, int weight, int height, String blood_type, String patient_pw, String patientLoginId,String role) {
+    public Member(Long patient_id, String patient_name, String gender, int age, int weight, int height, String blood_type, String patient_pw, String patientLoginId,Long role_id,String roles) {
         this.patient_id = patient_id;
         this.patient_name = patient_name;
         this.gender = gender;
@@ -35,12 +36,21 @@ public class Member {
         this.blood_type = blood_type;
         this.patient_pw = patient_pw;
         this.patientLoginId = patientLoginId;
-        this.role=role;
+        this.role_id=role_id;
+        this.roles=roles;
     }
 
-    public void modify(String patient_pw) {
-        this.patient_pw = patient_pw;
+    public void updatePassword(String newPassword) {
+        this.patient_pw = newPassword;
     }
+
+
+
+
+
+
+
+
 
 
 

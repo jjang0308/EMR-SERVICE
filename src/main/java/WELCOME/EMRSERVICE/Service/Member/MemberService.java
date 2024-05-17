@@ -60,21 +60,31 @@ public class MemberService implements UserDetailsService {
 
 
     @Transactional
-    public void modify(String loginId,String currentPassword,String newPassword, String confirmPassword) {
+    public void modify(String loginId, String currentPassword, String newPassword, String confirmPassword) {
         if (loginId == null) {
             throw new IllegalArgumentException("로그인 ID가 null입니다.");
         }
-//        Optional<Member> optionalMember = memberRepository.findByPatientLoginId(loginId);
-//        Member member = optionalMember.orElseThrow(() -> new IllegalArgumentException("회원을 찾을 수 없습니다. 로그인 ID: " + loginId));
-//
-//        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-//        if (!passwordEncoder.matches(currentPassword, member.getPatient_pw())) {
-//            throw new IllegalArgumentException("현재 비밀번호가 일치하지 않습니다.");
-//        }
-//
-//        String encPassword = passwordEncoder.encode(newPassword);
-//        member.modify(encPassword);
+
+        if (!newPassword.equals(confirmPassword)) {
+            throw new IllegalArgumentException("새 비밀번호와 확인 비밀번호가 일치하지 않습니다.");
+        }
+
+        Member memberEntity = memberRepository.findByPatientLoginId(loginId);
+        if (memberEntity == null) {
+            throw new IllegalArgumentException("회원을 찾을 수 없습니다. 로그인 ID: " + loginId);
+        }
+
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        if (!passwordEncoder.matches(currentPassword, memberEntity.getPatient_pw())) {
+            throw new IllegalArgumentException("현재 비밀번호가 일치하지 않습니다.");
+        }
+
+        String encPassword = passwordEncoder.encode(newPassword);
+        memberEntity.updatePassword(encPassword);
     }
+
+
+
 
     @Transactional
     public void deleteMember(String password) {

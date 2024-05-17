@@ -34,7 +34,7 @@ public class MemberPrincipalDetails implements UserDetails {
 
     @Override
     public String getUsername() {
-        return null;
+        return member.getPatientLoginId();
     }
 
     @Override
