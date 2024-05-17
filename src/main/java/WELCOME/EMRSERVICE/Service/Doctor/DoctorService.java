@@ -4,6 +4,8 @@ import WELCOME.EMRSERVICE.Domain.Doctor.Doctor;
 import WELCOME.EMRSERVICE.Dto.Doctor.DoctorDto;
 import WELCOME.EMRSERVICE.Repository.Doctor.DoctorRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -65,19 +67,18 @@ public class DoctorService implements UserDetailsService {
         String encPassword = passwordEncoder.encode(newPassword);
         doctorEntity.updatePassword(encPassword);
     }
-//    @Transactional
-//    public void deleteMember(String password) {
-//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//        String loginId = ((UserDetails) authentication.getPrincipal()).getUsername();
-//
-//        Doctor member = doctorRepository.findByDoctorLoginId(loginId)
-//                .orElseThrow(() -> new IllegalArgumentException("회원을 찾을 수 없습니다."));
-//
-//        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-//        if (!passwordEncoder.matches(password, member.getDoctor_pw())) {
-//            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
-//        }
-//
-//        doctorRepository.delete(member);
-//    }
+    @Transactional
+    public void deleteDoctor(String password) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String loginId = ((UserDetails) authentication.getPrincipal()).getUsername();
+
+        Doctor doctorEntity = doctorRepository.findByDoctorLoginId(loginId);
+
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        if (!passwordEncoder.matches(password, doctorEntity.getDoctor_pw())) {
+            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+        }
+
+        doctorRepository.delete(doctorEntity);
+    }
 }
