@@ -17,21 +17,25 @@ public class Doctor {
     private String doctor_name;
     private String doctorLoginId;
     private String doctor_pw;
-    private String role;
+    private Long role_id;
+    private String roles;
 
 
     @Builder
-    public Doctor(Long doctor_id, String doctor_name, String doctor_pw, String doctorLoginId,String role) {
+    public Doctor(Long doctor_id, String doctor_name, String doctor_pw, String doctorLoginId,Long  role_id,String roles) {
         this.doctor_id = doctor_id;
         this.doctor_name = doctor_name;
         this.doctor_pw = doctor_pw;
         this.doctorLoginId = doctorLoginId;
-        this.role=role;
+        this.role_id=role_id;
+        this.roles=roles;
     }
 
-    public void modify(String patient_pw) {
-        this.doctor_pw = doctor_pw;
+    public void updatePassword(String newPassword) {
+        this.doctor_pw = newPassword;
     }
+
+
 
 
 }
