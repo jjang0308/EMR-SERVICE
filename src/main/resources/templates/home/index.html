@@ -1,16 +1,18 @@
-<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/springsecurity5">
 <head>
     <meta charset="UTF-8">
     <title>Simple_member</title>
 </head>
 <body>
-<h1>Simple_Login</h1>
-<h3 sec:authorize="isAuthenticated()">반갑습니다. <span sec:authentication="name"></span>님!</h3>
-<hr>
-<a sec:authorize="isAnonymous()" th:href="@{/home/loginForm}">로그인</a>
-<a sec:authorize="isAuthenticated()" th:href="@{/member/logout}">로그아웃</a>
-<a sec:authorize="isAnonymous()" th:href="@{/home/choiceMember}">회원가입</a>
-<a sec:authorize="isAuthenticated()" th:href="@{/member/updatePassword}">개인정보 수정</a>
-<a sec:authorize="isAuthenticated()" th:href="@{/member/delete}">회원 탈퇴</a>
+<h1>MAIN_EMR</h1>
+
+<ul sec:authorize="isAnonymous()">
+    <li><a href="/home/loginForm">로그인</a></li>
+    <li><a href="/home/choiceMember">회원가입</a></li>
+</ul>
+
+
+
 </body>
 </html>
