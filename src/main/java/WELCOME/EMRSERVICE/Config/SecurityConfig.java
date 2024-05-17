@@ -1,6 +1,8 @@
 package WELCOME.EMRSERVICE.Config;
 
-import WELCOME.EMRSERVICE.Service.MemberService;
+
+import WELCOME.EMRSERVICE.Service.Doctor.DoctorService;
+import WELCOME.EMRSERVICE.Service.Member.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,10 +20,12 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final MemberService memberService;
+    private final DoctorService doctorService;
 
     @Autowired
-    public SecurityConfig(MemberService memberService) {
+    public SecurityConfig(MemberService memberService, DoctorService doctorService) {
         this.memberService = memberService;
+        this.doctorService = doctorService;
     }
 
     @Bean
@@ -38,24 +42,32 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .antMatchers("/**").permitAll()
-                .and()
-                .formLogin()     // 로그인 설정
-                .loginPage("/member/login")      // 커스텀 login 페이지를 사용
-                .defaultSuccessUrl("/")      // 로그인 성공 시 이동할 페이지
-                .permitAll()
+                .antMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
+                .antMatchers("/home/signup").permitAll()
+                .antMatchers("/doctor/signup").permitAll()
+                .antMatchers("/member/signup").permitAll()
+                .antMatchers("/doctor/**").access("hasRole('ROLE_DOCTOR')")
+                .antMatchers("/member/**").access("hasRole('ROLE_MEMBER')")
                 .and()
                 .logout()
-                .logoutRequestMatcher(new AntPathRequestMatcher("/member/logout"))
+                .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
                 .logoutSuccessUrl("/")
-                .invalidateHttpSession(true)    // 세션 초기화
+                .invalidateHttpSession(true) // 세션 초기화
                 .and()
-                .exceptionHandling();
+                .exceptionHandling()
+                .and()
+                .formLogin()
+                .loginPage("/login")
+                .loginProcessingUrl("/login")
+                .permitAll();
     }
+
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         // 로그인 처리를 하기 위한 AuthenticationManagerBuilder를 설정
         auth.userDetailsService(memberService).passwordEncoder(passwordEncoder());
+        auth.userDetailsService(doctorService).passwordEncoder(passwordEncoder());
     }
+
 }
