@@ -127,7 +127,7 @@ public class MemberController {
         try {
             memberService.deleteMember(password);
             redirectAttributes.addFlashAttribute("success", "회원 탈퇴가 완료되었습니다.");
-            return "redirect:/member/logout";
+            return "redirect:/logout";
         } catch (IllegalArgumentException e) {
             redirectAttributes.addFlashAttribute("error", e.getMessage());
             return "redirect:/member/delete"; // 탈퇴 실패 시 다시 탈퇴 페이지로 이동
