@@ -1,6 +1,7 @@
 package WELCOME.EMRSERVICE.Controller.Member;
 
 import WELCOME.EMRSERVICE.Dto.Member.MemberDto;
+import WELCOME.EMRSERVICE.Dto.Registration.RegistrationDto;
 import WELCOME.EMRSERVICE.Service.Member.MemberService;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.Authentication;
@@ -35,13 +36,14 @@ public class MemberController {
     @GetMapping("/member/signup")
     public String signupForm(Model model) {
         model.addAttribute("member", new MemberDto());
+        model.addAttribute("registration", new RegistrationDto());
         return "member/signupForm";
     }
 
 
     @PostMapping("/member/signup")
-    public String signup(MemberDto memberDto) {
-        memberService.signUp(memberDto);
+    public String signup(MemberDto memberDto,RegistrationDto registrationDto) {
+        memberService.signUp(memberDto,registrationDto);
         return "redirect:/";
     }
     @GetMapping("/member/dashboard")
