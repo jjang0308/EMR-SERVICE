@@ -12,7 +12,7 @@
     <input type="radio" id="doctorRadio" name="userType" value="의사">
     <label for="doctorRadio">의사</label>
     <input type="radio" id="patientRadio" name="userType" value="고객">
-    <label for="patientRadio">고객</label>
+    <label for="patientRadio">환자</label>
     <button type="submit">다음</button>
 </form>
 
@@ -21,8 +21,9 @@
         var selectedUserType = document.querySelector('input[name="userType"]:checked').value;
         if (selectedUserType === "의사") {
             this.action = "/doctor/signup";
-        }
+        } 
     });
+
 </script>
 </body>
 </html>

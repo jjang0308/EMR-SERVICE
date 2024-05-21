@@ -34,15 +34,10 @@ public class DoctorService implements UserDetailsService {
         return doctor.getDoctorLoginId();
     }
 
-
-
     @Override
-    @Transactional
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-      return null;
+        return null;
     }
-
-
 
     @Transactional
     public void modify(String loginId, String currentPassword, String newPassword, String confirmPassword) {
@@ -81,4 +76,5 @@ public class DoctorService implements UserDetailsService {
 
         doctorRepository.delete(doctorEntity);
     }
+
 }

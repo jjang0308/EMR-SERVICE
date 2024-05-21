@@ -34,4 +34,5 @@ public class Registration {
         this.registration_time = registration_time;
         this.doctor_comment = doctor_comment;
     }
+
 }

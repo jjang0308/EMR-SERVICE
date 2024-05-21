@@ -31,6 +31,10 @@ public class Doctor {
         this.roles=roles;
     }
 
+    public Doctor(Long doctor_id) {
+        this.doctor_id = doctor_id;
+    }
+
     public void updatePassword(String newPassword) {
         this.doctor_pw = newPassword;
     }

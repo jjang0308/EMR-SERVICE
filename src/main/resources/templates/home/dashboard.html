@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:sec="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns:sec="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
@@ -22,6 +22,8 @@
     <a>환자</a>
     <a th:href="@{/member/updatePassword}">개인정보 수정</a>
     <a th:href="@{/member/delete}">회원 탈퇴</a>
+    <a th:href="@{/member/book}">진료 예약</a>
 </div>
+
 </body>
 </html>

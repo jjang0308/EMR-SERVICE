@@ -36,7 +36,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(WebSecurity web) throws Exception {
         // 인증을 무시하기 위한 설정
-        web.ignoring().antMatchers("/css/**","/js/**","/img/**","/lib/**");
+        web.ignoring().antMatchers("/static/css/**","/js/**","/img/**","/lib/**");
     }
 
     @Override
@@ -59,6 +59,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .formLogin()
                 .loginPage("/login")
                 .loginProcessingUrl("/login")
+                .defaultSuccessUrl("/home/dashboard",true)
                 .permitAll();
     }
 
