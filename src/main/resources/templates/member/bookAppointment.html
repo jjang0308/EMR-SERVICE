@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Book Appointment</title>
+</head>
+<body>
+<h1>Book Appointment</h1>
+<form th:action="@{/member/book}" method="post">
+    <div>
+        <label for="dept_id">의사 id:</label>
+        <input type="text" id="dept_id" name="dept_id"/>
+    </div>
+    <div>
+        <label for="symptom">증상:</label>
+        <input type="text" id="symptom" name="symptom"/>
+    </div>
+    <div>
+        <label for="treat_time">예약 시간:</label>
+        <input type="datetime-local" id="treat_time" name="treat_time"/>
+    </div>
+    <div>
+        <button type="submit">예약</button>
+    </div>
+</form>
+</body>
+</html>
+

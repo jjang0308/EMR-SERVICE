@@ -2,7 +2,6 @@ package WELCOME.EMRSERVICE.Service.Member;
 
 import WELCOME.EMRSERVICE.Domain.Doctor.Doctor;
 import WELCOME.EMRSERVICE.Domain.Member.Member;
-import WELCOME.EMRSERVICE.Domain.Registration.Registration;
 import WELCOME.EMRSERVICE.Dto.Member.MemberDto;
 import WELCOME.EMRSERVICE.Dto.Registration.RegistrationDto;
 import WELCOME.EMRSERVICE.Repository.Doctor.DoctorRepository;
@@ -41,9 +40,6 @@ public class MemberService implements UserDetailsService {
 
         Member member = memberDto.toEntity();
         memberRepository.save(member);
-
-        Registration registration =registrationDto.toEntity(member);
-        registrationRepository.save(registration);
 
         // 저장한 사용자의 아이디를 반환
         return member.getPatientLoginId();
