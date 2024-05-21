@@ -36,7 +36,6 @@ public class MemberController {
     @GetMapping("/member/signup")
     public String signupForm(Model model) {
         model.addAttribute("member", new MemberDto());
-        model.addAttribute("registration", new RegistrationDto());
         return "member/signupForm";
     }
 

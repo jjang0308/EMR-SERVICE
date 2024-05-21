@@ -10,7 +10,7 @@ import javax.persistence.Id;
 @NoArgsConstructor(access= AccessLevel.PROTECTED)
 @Getter
 @Setter
-@Entity(name = "role")
+@Entity(name = "roles")
 public class Role {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,4 +23,10 @@ public class Role {
         this.role_id = role_id;
         this.role_name = role_name;
     }
+
+
+
+
+
+
 }

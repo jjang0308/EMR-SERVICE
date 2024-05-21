@@ -9,12 +9,22 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class MainController {
 
     @GetMapping("/home/loginForm")
-    public String Main() {
-        return "/home/choiceMember_loginForm";
+    public String choiceMember_loginForm() {
+        return "/home/loginForm";
     }
 
     @GetMapping("/home/choiceMember")
-    public String Main1() {
+    public String choiceMember() {
         return "/home/choiceMember_signup";
     }
+
+
+    @GetMapping("/home/dashboard")
+    public String dashboard() {
+        return "/home/dashboard";
+    }
+
+
+
+
 }
