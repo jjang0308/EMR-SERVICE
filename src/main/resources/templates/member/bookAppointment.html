@@ -1,28 +1,35 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Book Appointment</title>
 </head>
 <body>
-<h1>Book Appointment</h1>
-<form th:action="@{/member/book}" method="post">
+<h1>진료 예약</h1>
+
+<form action="#" th:action="@{/appointments/new}" th:method="post">
     <div>
-        <label for="dept_id">의사 id:</label>
-        <input type="text" id="dept_id" name="dept_id"/>
+        <label for="patientId">환자 ID:</label>
+        <input type="text" id="patientId" name="patientId" required>
     </div>
     <div>
-        <label for="symptom">증상:</label>
-        <input type="text" id="symptom" name="symptom"/>
+        <label for="doctorId">의사 ID:</label>
+        <input type="text" id="doctorId" name="doctorId" required>
     </div>
     <div>
-        <label for="treat_time">예약 시간:</label>
-        <input type="datetime-local" id="treat_time" name="treat_time"/>
+        <label for="appointmentDate">예약 시간:</label>
+        <input type="datetime-local" id="appointmentDate" name="appointmentDate" required>
     </div>
     <div>
-        <button type="submit">예약</button>
+        <button type="submit">예약하기</button>
     </div>
 </form>
+
+<div th:if="${error}">
+    <p th:text="${error}"></p>
+</div>
+
+<a th:href="@{/appointments}">뒤로</a>
+
 </body>
 </html>
-
