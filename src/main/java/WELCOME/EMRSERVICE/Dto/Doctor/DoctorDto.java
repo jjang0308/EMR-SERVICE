@@ -10,34 +10,28 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class DoctorDto {
-    private Long doctor_id;
-    private String doctor_name;
-    private String doctor_login_id;
-    private String doctor_pw;
+    private Long doctorId;
+    private String doctorName;
+    private String doctorLoginId;
+    private String doctorPw;
     private String roles;
-
-
 
     public Doctor toEntity() {
         return Doctor.builder()
-                .doctor_id(doctor_id)
-                .doctor_name(doctor_name)
-                .doctor_pw(doctor_pw)
-                .doctorLoginId(doctor_login_id)
+                .doctorId(doctorId)
+                .doctorName(doctorName)
+                .doctorPw(doctorPw)
+                .doctorLoginId(doctorLoginId)
                 .roles(roles)
                 .build();
     }
 
     @Builder
-    public DoctorDto(Long doctor_id, String doctor_name, String doctor_login_id, String doctor_pw,String roles) {
-        this.doctor_id = doctor_id;
-        this.doctor_name = doctor_name;
-        this.doctor_pw = doctor_pw;
-        this.doctor_login_id = doctor_login_id;
-        this.roles=roles;
-
+    public DoctorDto(Long doctorId, String doctorName, String doctorLoginId, String doctorPw, String roles) {
+        this.doctorId = doctorId;
+        this.doctorName = doctorName;
+        this.doctorPw = doctorPw;
+        this.doctorLoginId = doctorLoginId;
+        this.roles = roles;
     }
-
-
-
 }
