@@ -23,7 +23,7 @@ public class DoctorService implements UserDetailsService {
     @Transactional
     public String signUp(DoctorDto doctorDto) {
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        doctorDto.setDoctor_pw(passwordEncoder.encode(doctorDto.getDoctor_pw()));
+        doctorDto.setDoctorPw(passwordEncoder.encode(doctorDto.getDoctorPw()));
 
         doctorDto.setRoles("ROLE_DOCTOR");
 
@@ -55,13 +55,14 @@ public class DoctorService implements UserDetailsService {
         }
 
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        if (!passwordEncoder.matches(currentPassword, doctorEntity.getDoctor_pw())) {
+        if (!passwordEncoder.matches(currentPassword, doctorEntity.getDoctorPw())) {
             throw new IllegalArgumentException("현재 비밀번호가 일치하지 않습니다.");
         }
 
         String encPassword = passwordEncoder.encode(newPassword);
         doctorEntity.updatePassword(encPassword);
     }
+
     @Transactional
     public void deleteDoctor(String password) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -70,11 +71,10 @@ public class DoctorService implements UserDetailsService {
         Doctor doctorEntity = doctorRepository.findByDoctorLoginId(loginId);
 
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        if (!passwordEncoder.matches(password, doctorEntity.getDoctor_pw())) {
+        if (!passwordEncoder.matches(password, doctorEntity.getDoctorPw())) {
             throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
         }
 
         doctorRepository.delete(doctorEntity);
     }
-
 }

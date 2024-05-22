@@ -28,7 +28,7 @@ public class DoctorPrincipalDetails implements UserDetails {
 
     @Override
     public String getPassword() {
-        return doctor.getDoctor_pw();
+        return doctor.getDoctorPw();
     }
 
     @Override
