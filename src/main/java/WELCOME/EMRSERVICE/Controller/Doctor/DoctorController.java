@@ -1,6 +1,7 @@
 package WELCOME.EMRSERVICE.Controller.Doctor;
 
 import WELCOME.EMRSERVICE.Dto.Doctor.DoctorDto;
+import WELCOME.EMRSERVICE.Service.Doctor.DeptService;
 import WELCOME.EMRSERVICE.Service.Doctor.DoctorService;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.Authentication;
@@ -20,6 +21,8 @@ import javax.servlet.http.HttpServletRequest;
 @AllArgsConstructor
 public class DoctorController {
     private final DoctorService doctorService;
+    private final DeptService deptService;
+
     @GetMapping("/doctor/dashboard")
     public String dashboard() {
         return "/doctor/dashboard";
@@ -28,6 +31,7 @@ public class DoctorController {
     @GetMapping("/doctor/signup")
     public String signupFormDoctor(Model model) {
         model.addAttribute("doctor", new DoctorDto());
+        model.addAttribute("depts", deptService.getAllDepts());
         return "doctor/signupForm";
     }
 

@@ -1,7 +1,7 @@
-package WELCOME.EMRSERVICE.Controller;
+package WELCOME.EMRSERVICE.Controller.Appointment;
 
-import WELCOME.EMRSERVICE.Domain.Appointment;
-import WELCOME.EMRSERVICE.Service.AppointmentService;
+import WELCOME.EMRSERVICE.Domain.Appointment.Appointment;
+import WELCOME.EMRSERVICE.Service.Appointment.AppointmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
+
 
 @Controller
 @RequestMapping("/appointments")
@@ -35,14 +36,14 @@ public class AppointmentController {
         LocalDateTime appointmentDateTime = LocalDateTime.parse(appointmentDate);
         try {
             appointmentService.createAppointment(patientId, doctorId, appointmentDateTime);
-            return "redirect:/appointments";
+            return "redirect:/home/dashboard";  // 예약 후 대시보드로 리디렉션
         } catch (IllegalArgumentException e) {
             model.addAttribute("error", e.getMessage());
             return "/member/bookAppointment";
         }
     }
 
-    @GetMapping
+    @GetMapping("/check")
     public String listAppointments(@RequestParam(required = false) String patientId, Model model) {
         List<Appointment> appointments;
         if (patientId != null) {
