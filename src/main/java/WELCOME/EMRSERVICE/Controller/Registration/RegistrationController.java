@@ -41,7 +41,11 @@ public class RegistrationController {
         String loginId = authentication.getName();
         List<Registration> appointments = registrationService.findAppointmentsByPatient(loginId);
         model.addAttribute("appointments", appointments);
+<<<<<<< HEAD
         return "/member/appointments";
+=======
+        return "listAppointments";
+>>>>>>> RYU
     }
 
     @PostMapping("/member/cancel")
