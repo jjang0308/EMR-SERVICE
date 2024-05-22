@@ -2,17 +2,11 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Appointments</title>
+    <title>Appointments List</title>
 </head>
 <body>
-<h1>예약 목록</h1>
-
-<form action="#" th:action="@{/appointments}" th:method="get">
-    <label for="patientId">환자 ID로 검색:</label>
-    <input type="number" id="patientId" name="patientId">
-    <button type="submit">검색</button>
-</form>
-
+<h1>예약 확인</h1>
+<hr>
 <table>
     <thead>
     <tr>
@@ -24,9 +18,9 @@
     </thead>
     <tbody>
     <tr th:each="appointment : ${appointments}">
-        <td th:text="${appointment.patient.patient_name}">환자 이름</td>
-        <td th:text="${appointment.doctor.doctor_name}">의사 이름</td>
-        <td th:text="${appointment.appointmentDate}">예약 시간</td>
+        <td th:text="${appointment.patient != null ? appointment.patient.patient_name : 'N/A'}">환자 이름</td>
+        <td th:text="${appointment.doctor != null ? appointment.doctor.doctorName : 'N/A'}">의사 이름</td>
+        <td th:text="${#temporals.format(appointment.appointmentDate, 'yyyy-MM-dd HH:mm')}">예약 시간</td>
         <td>
             <form action="#" th:action="@{/appointments/cancel/{id}(id=${appointment.appointment_id})}" th:method="post">
                 <button type="submit">취소</button>
@@ -36,8 +30,6 @@
     </tbody>
 </table>
 
-
-<a th:href="@{/appointments/new}">새 예약</a>
-
+<a th:href="@{/home/dashboard}">뒤로</a>
 </body>
 </html>
