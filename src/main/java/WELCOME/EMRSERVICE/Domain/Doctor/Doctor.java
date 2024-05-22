@@ -1,11 +1,10 @@
 package WELCOME.EMRSERVICE.Domain.Doctor;
 
+import WELCOME.EMRSERVICE.Domain.Appointment;
 import lombok.*;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.List;
 
 @NoArgsConstructor(access= AccessLevel.PROTECTED)
 @Getter @Setter
@@ -39,6 +38,8 @@ public class Doctor {
         this.doctor_pw = newPassword;
     }
 
+    @OneToMany(mappedBy = "doctor")
+    private List<Appointment> appointments;
 
 
 
