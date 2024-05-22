@@ -1,6 +1,6 @@
-package WELCOME.EMRSERVICE.Repository;
+package WELCOME.EMRSERVICE.Repository.Appointment;
 
-import WELCOME.EMRSERVICE.Domain.Appointment;
+import WELCOME.EMRSERVICE.Domain.Appointment.Appointment;
 import WELCOME.EMRSERVICE.Domain.Doctor.Doctor;
 import WELCOME.EMRSERVICE.Domain.Member.Member;
 import org.springframework.data.jpa.repository.JpaRepository;

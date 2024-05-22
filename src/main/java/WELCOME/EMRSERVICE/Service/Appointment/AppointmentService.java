@@ -1,9 +1,9 @@
-package WELCOME.EMRSERVICE.Service;
+package WELCOME.EMRSERVICE.Service.Appointment;
 
-import WELCOME.EMRSERVICE.Domain.Appointment;
+import WELCOME.EMRSERVICE.Domain.Appointment.Appointment;
 import WELCOME.EMRSERVICE.Domain.Doctor.Doctor;
 import WELCOME.EMRSERVICE.Domain.Member.Member;
-import WELCOME.EMRSERVICE.Repository.AppointmentRepository;
+import WELCOME.EMRSERVICE.Repository.Appointment.AppointmentRepository;
 import WELCOME.EMRSERVICE.Repository.Doctor.DoctorRepository;
 import WELCOME.EMRSERVICE.Repository.Member.MemberRepository;
 import org.springframework.beans.factory.annotation.Autowired;
