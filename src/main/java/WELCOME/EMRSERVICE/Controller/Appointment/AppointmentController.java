@@ -58,6 +58,6 @@ public class AppointmentController {
     @PostMapping("/cancel/{id}")
     public String cancelAppointment(@PathVariable Long id) {
         appointmentService.cancelAppointment(id);
-        return "redirect:/appointments";
+        return "redirect:/home/dashboard";
     }
 }
