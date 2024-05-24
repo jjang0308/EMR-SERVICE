@@ -47,6 +47,11 @@ public class AppointmentService {
         return appointmentRepository.findByPatient(patient);
     }
 
+    public List<Appointment> getAppointmentsByDoctor(Long doctorId) {
+        Doctor doctor = doctorRepository.findById(doctorId).orElseThrow(() -> new IllegalArgumentException("의사를 찾을 수 없습니다."));
+        return appointmentRepository.findByDoctor(doctor);
+    }
+
     public List<Appointment> getAllAppointments() {
         return appointmentRepository.findAll();
     }

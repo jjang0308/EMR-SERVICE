@@ -1,6 +1,8 @@
 package WELCOME.EMRSERVICE.Controller.Appointment;
 
 import WELCOME.EMRSERVICE.Domain.Appointment.Appointment;
+import WELCOME.EMRSERVICE.Domain.Doctor.Doctor;
+import WELCOME.EMRSERVICE.Repository.Doctor.DoctorRepository;
 import WELCOME.EMRSERVICE.Service.Appointment.AppointmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -16,10 +18,12 @@ import java.util.List;
 public class AppointmentController {
 
     private final AppointmentService appointmentService;
+    private final DoctorRepository doctorRepository;
 
     @Autowired
-    public AppointmentController(AppointmentService appointmentService) {
+    public AppointmentController(AppointmentService appointmentService, DoctorRepository doctorRepository) {
         this.appointmentService = appointmentService;
+        this.doctorRepository = doctorRepository;
     }
 
     @GetMapping("/new")
@@ -63,6 +67,15 @@ public class AppointmentController {
         List<Appointment> appointments = appointmentService.getAppointmentsByPatient(patientId);
         model.addAttribute("appointments", appointments);
         return "/member/listMyAppointments";
+    }
+
+    @GetMapping("/doctor")
+    public String listDoctorAppointments(Authentication authentication, Model model) {
+        String doctorLoginId = authentication.getName();
+        Doctor doctor = doctorRepository.findByDoctorLoginId(doctorLoginId);
+        List<Appointment> appointments = appointmentService.getAppointmentsByDoctor(doctor.getDoctorId());
+        model.addAttribute("appointments", appointments);
+        return "/doctor/listDoctorAppointments";
     }
 
     @PostMapping("/cancel/{id}")

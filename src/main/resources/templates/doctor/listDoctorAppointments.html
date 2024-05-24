@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>My Patients' Appointments</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container">
+    <h1>진료 예약 목록</h1>
+    <hr>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>환자 이름</th>
+            <th>예약 시간</th>
+            <th>취소</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="appointment : ${appointments}">
+            <td th:text="${appointment.patient != null ? appointment.patient.patient_name : 'N/A'}">환자 이름</td>
+            <td th:text="${#temporals.format(appointment.appointmentDate, 'yyyy-MM-dd HH:mm')}">예약 시간</td>
+            <td>
+                <form th:action="@{/appointments/cancel/{id}(id=${appointment.appointment_id})}" th:method="post">
+                    <button type="submit" class="btn btn-danger">취소</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <a th:href="@{/home/dashboard}" class="btn btn-secondary">뒤로</a>
+</div>
+</body>
+</html>
