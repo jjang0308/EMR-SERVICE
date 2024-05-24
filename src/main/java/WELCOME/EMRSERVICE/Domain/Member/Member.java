@@ -1,6 +1,6 @@
 package WELCOME.EMRSERVICE.Domain.Member;
 
-import WELCOME.EMRSERVICE.Domain.Appointment;
+import WELCOME.EMRSERVICE.Domain.Appointment.Appointment;
 import WELCOME.EMRSERVICE.Domain.Registration.Registration;
 import lombok.*;
 
