@@ -3,33 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <title>Book Appointment</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 <body>
-<h1>진료 예약</h1>
+<div class="container">
+    <h1>진료 예약</h1>
 
-<form action="#" th:action="@{/appointments/new}" th:method="post">
-    <div>
-        <label for="patientId">환자 ID:</label>
-        <input type="text" id="patientId" name="patientId" required>
-    </div>
-    <div>
-        <label for="doctorId">의사 ID:</label>
-        <input type="text" id="doctorId" name="doctorId" required>
-    </div>
-    <div>
-        <label for="appointmentDate">예약 시간:</label>
-        <input type="datetime-local" id="appointmentDate" name="appointmentDate" required>
-    </div>
-    <div>
-        <button type="submit">예약하기</button>
-    </div>
-</form>
+    <form action="#" th:action="@{/appointments/new}" th:method="post">
+        <div>
+            <input type="hidden" id="patientId" name="patientId" th:value="${patientId}">
+        </div>
+        <div class="form-group">
+            <label for="doctorId">의사 ID:</label>
+            <input type="text" class="form-control" id="doctorId" name="doctorId" required>
+        </div>
+        <div class="form-group">
+            <label for="appointmentDate">예약 시간:</label>
+            <input type="datetime-local" class="form-control" id="appointmentDate" name="appointmentDate" required>
+        </div>
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary">예약하기</button>
+        </div>
+    </form>
 
-<div th:if="${error}">
-    <p th:text="${error}"></p>
+    <div th:if="${error}" class="alert alert-danger">
+        <p th:text="${error}"></p>
+    </div>
+
+    <a th:href="@{/home/dashboard}" class="btn btn-secondary">뒤로</a>
 </div>
-
-<a th:href="@{/appointments}">뒤로</a>
-
 </body>
 </html>
