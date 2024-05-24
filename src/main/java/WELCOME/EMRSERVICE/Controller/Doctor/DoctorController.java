@@ -1,7 +1,8 @@
 package WELCOME.EMRSERVICE.Controller.Doctor;
 
+import WELCOME.EMRSERVICE.Domain.Doctor.Dept;
 import WELCOME.EMRSERVICE.Dto.Doctor.DoctorDto;
-import WELCOME.EMRSERVICE.Service.Doctor.DeptService;
+import WELCOME.EMRSERVICE.Repository.Doctor.DeptRepository;
 import WELCOME.EMRSERVICE.Service.Doctor.DoctorService;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.Authentication;
@@ -16,12 +17,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 @Controller
 @AllArgsConstructor
 public class DoctorController {
     private final DoctorService doctorService;
-    private final DeptService deptService;
+    private final DeptRepository deptRepository;
 
     @GetMapping("/doctor/dashboard")
     public String dashboard() {
@@ -30,8 +32,9 @@ public class DoctorController {
 
     @GetMapping("/doctor/signup")
     public String signupFormDoctor(Model model) {
+        List<Dept> depts = deptRepository.findAll();
         model.addAttribute("doctor", new DoctorDto());
-        model.addAttribute("depts", deptService.getAllDepts());
+        model.addAttribute("depts", depts);
         return "doctor/signupForm";
     }
 
