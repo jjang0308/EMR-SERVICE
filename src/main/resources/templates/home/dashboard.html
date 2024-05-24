@@ -2,35 +2,70 @@
 <html lang="en" xmlns:sec="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Dashboard</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 <body>
-<!-- 인증된 사용자만 볼 수 있는 로그아웃 링크 -->
-<div sec:authorize="isAuthenticated()">
-    <a th:href="@{/logout}">로그아웃</a>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" href="#">
+        EMR Service
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ml-auto">
+            <!-- 의사 링크 -->
+            <li class="nav-item" sec:authorize="hasRole('DOCTOR')">
+                <a class="nav-link" th:href="@{/appointments/doctor}">진료 확인</a>
+            </li>
+            <li class="nav-item" sec:authorize="hasRole('DOCTOR')">
+                <a class="nav-link" th:href="@{/doctor/updatePassword}">개인정보 수정</a>
+            </li>
+            <li class="nav-item" sec:authorize="hasRole('DOCTOR')">
+                <a class="nav-link" th:href="@{/doctor/delete}">회원 탈퇴</a>
+            </li>
+            <li class="nav-item" sec:authorize="hasRole('DOCTOR')">
+                <a class="nav-link" th:href="@{/logout}">로그아웃</a>
+            </li>
+            <!-- 환자 링크 -->
+            <li class="nav-item" sec:authorize="hasRole('MEMBER')">
+                <a class="nav-link" th:href="@{/member/book}">진료 예약</a>
+            </li>
+            <li class="nav-item" sec:authorize="hasRole('MEMBER')">
+                <a class="nav-link" th:href="@{/appointments/my}">진료 확인</a>
+            </li>
+            <li class="nav-item" sec:authorize="hasRole('MEMBER')">
+                <a class="nav-link" th:href="@{/member/delete}">회원 탈퇴</a>
+            </li>
+            <li class="nav-item" sec:authorize="hasRole('MEMBER')">
+                <a class="nav-link" th:href="@{/member/updatePassword}">개인정보 수정</a>
+            </li>
+            <li class="nav-item" sec:authorize="hasRole('MEMBER')">
+                <a class="nav-link" th:href="@{/logout}">로그아웃</a>
+            </li>
+            <!-- 관리자 링크 -->
+            <li class="nav-item" sec:authorize="hasRole('ADMIN')">
+                <a class="nav-link" th:href="@{/appointments/check}">진료 확인</a>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<div class="container mt-5">
+    <h1 class="text-center">대시보드</h1>
+    <p class="text-center">환영합니다! 이곳에서 다양한 기능을 이용할 수 있습니다.</p>
 </div>
 
-<!-- 의사 권한에 따른 링크 -->
-<div sec:authorize="hasRole('DOCTOR')">
-    <a>의사</a>
-    <a th:href="@{/doctor/updatePassword}">개인정보 수정</a>
-    <a th:href="@{/doctor/delete}">회원 탈퇴</a>
-    <a th:href="@{/appointments/doctor}">진료 확인</a>
-</div>
+<footer class="footer mt-auto py-3 bg-dark">
+    <div class="container text-center">
+        <span class="text-muted">© 2024 EMR Service. All rights reserved.</span>
+    </div>
+</footer>
 
-<!-- 환자 권한에 따른 링크 -->
-<div sec:authorize="hasRole('MEMBER')">
-    <a>환자</a>
-    <a th:href="@{/member/updatePassword}">개인정보 수정</a>
-    <a th:href="@{/member/delete}">회원 탈퇴</a>
-    <a th:href="@{/member/book}">진료 예약</a>
-    <a th:href="@{/appointments/my}">진료 확인</a>
-</div>
-
-<div sec:authorize="hasRole('ADMIN')">
-    <a>Admin</a>
-    <a th:href="@{/appointments/check}">진료 확인</a>
-</div>
-
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>

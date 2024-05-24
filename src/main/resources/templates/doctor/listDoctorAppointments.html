@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/springsecurity5">
 <head>
     <meta charset="UTF-8">
     <title>My Patients' Appointments</title>
@@ -7,8 +7,33 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 <body>
-<div class="container">
-    <h1>진료 예약 목록</h1>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" href="#">
+        EMR Service
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item" sec:authorize="hasRole('DOCTOR')">
+                <a class="nav-link" th:href="@{/appointments/doctor}">진료 확인</a>
+            </li>
+            <li class="nav-item" sec:authorize="hasRole('DOCTOR')">
+                <a class="nav-link" th:href="@{/doctor/updatePassword}">개인정보 수정</a>
+            </li>
+            <li class="nav-item" sec:authorize="hasRole('DOCTOR')">
+                <a class="nav-link" th:href="@{/doctor/delete}">회원 탈퇴</a>
+            </li>
+            <li class="nav-item" sec:authorize="isAuthenticated()">
+                <a class="nav-link" th:href="@{/logout}">로그아웃</a>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<div class="container mt-5">
+    <h1 class="text-center">진료 예약 목록</h1>
     <hr>
     <table class="table table-striped">
         <thead>
@@ -31,7 +56,19 @@
         </tbody>
     </table>
 
-    <a th:href="@{/home/dashboard}" class="btn btn-secondary">뒤로</a>
+    <div class="text-center mt-4">
+        <a th:href="@{/home/dashboard}" class="btn btn-secondary">뒤로</a>
+    </div>
 </div>
+
+<footer class="footer mt-auto py-3 bg-dark">
+    <div class="container text-center">
+        <span class="text-muted">© 2024 EMR Service. All rights reserved.</span>
+    </div>
+</footer>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>

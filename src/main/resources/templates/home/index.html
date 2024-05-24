@@ -2,17 +2,51 @@
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/springsecurity5">
 <head>
     <meta charset="UTF-8">
-    <title>Simple_member</title>
+    <title>EMR Service</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}">
 </head>
 <body>
-<h1>MAIN_EMR</h1>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" href="#">
+        EMR Service
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item" sec:authorize="isAnonymous()">
+                <a class="nav-link" href="/home/loginForm">로그인</a>
+            </li>
+            <li class="nav-item" sec:authorize="isAnonymous()">
+                <a class="nav-link" href="/home/choiceMember">회원가입</a>
+            </li>
+            <li class="nav-item" sec:authorize="isAuthenticated()">
+                <a class="nav-link" href="/home/logout">로그아웃</a>
+            </li>
+        </ul>
+    </div>
+</nav>
 
-<ul sec:authorize="isAnonymous()">
-    <li><a href="/home/loginForm">로그인</a></li>
-    <li><a href="/home/choiceMember">회원가입</a></li>
-</ul>
+<div class="container-fluid bg-image text-center text-white" style="background-image: url('/images/healthcare.jpg');">
+    <div class="overlay"></div>
+    <div class="content">
+        <h1 class="display-4">Welcome to the EMR Service</h1>
+        <p class="lead">Efficient and secure management of electronic medical records.</p>
+        <a class="btn btn-outline-light btn-lg mx-2" href="/home/loginForm" role="button" sec:authorize="isAnonymous()">로그인</a>
+        <a class="btn btn-outline-info btn-lg mx-2" href="/home/choiceMember" role="button" sec:authorize="isAnonymous()">회원가입</a>
+    </div>
+</div>
 
+<footer class="footer mt-auto py-3 bg-dark">
+    <div class="container text-center">
+        <span class="text-muted">© 2024 EMR Service. All rights reserved.</span>
+    </div>
+</footer>
 
-
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>

@@ -1,59 +1,102 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/springsecurity5">
 <head>
     <meta charset="UTF-8">
-    <title>Sign Up</title>
+    <title>환자 회원가입</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 <body>
-<h1>회원가입</h1>
-<hr>
-<form action="/member/signup" th:object="${member}" method="post">
-    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" href="#">
+        EMR Service
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item" sec:authorize="isAnonymous()">
+                <a class="nav-link" href="/home/loginForm">로그인</a>
+            </li>
+            <li class="nav-item" sec:authorize="isAnonymous()">
+                <a class="nav-link" href="/home/choiceMember">회원가입</a>
+            </li>
+            <li class="nav-item" sec:authorize="isAuthenticated()">
+                <a class="nav-link" href="/home/logout">로그아웃</a>
+            </li>
+        </ul>
+    </div>
+</nav>
 
-    <div>
-        <label for="patientLoginId">아이디</label>
-        <input type="text" id="patientLoginId" th:field="*{patient_login_id}" placeholder="아이디 입력" required>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header bg-dark text-white text-center">
+                    <h3>환자 회원가입</h3>
+                </div>
+                <div class="card-body">
+                    <form action="/member/signup" th:object="${member}" method="post">
+                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                        <div class="form-group">
+                            <label for="patientLoginId">아이디</label>
+                            <input type="text" class="form-control" id="patientLoginId" th:field="*{patient_login_id}" placeholder="아이디 입력" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="patient_pw">비밀번호</label>
+                            <input type="password" class="form-control" id="patient_pw" th:field="*{patient_pw}" placeholder="비밀번호 입력" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="patient_name">이름</label>
+                            <input type="text" class="form-control" id="patient_name" th:field="*{patient_name}" placeholder="이름 입력" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="gender">성별</label>
+                            <select id="gender" class="form-control" th:field="*{gender}" required>
+                                <option value="">선택하세요</option>
+                                <option value="남">남</option>
+                                <option value="여">여</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="age">나이</label>
+                            <input type="number" class="form-control" id="age" th:field="*{age}" placeholder="나이 입력" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="weight">체중</label>
+                            <input type="number" class="form-control" id="weight" th:field="*{weight}" placeholder="체중 입력" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="height">신장</label>
+                            <input type="number" class="form-control" id="height" th:field="*{height}" placeholder="신장 입력" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="blood_type">혈액형</label>
+                            <select id="blood_type" class="form-control" th:field="*{blood_type}" required>
+                                <option value="">선택하세요</option>
+                                <option value="A">A형</option>
+                                <option value="B">B형</option>
+                                <option value="AB">AB형</option>
+                                <option value="O">O형</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block">회원가입</button>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
-    <div>
-        <label for="patient_pw">비밀번호</label>
-        <input type="password" id="patient_pw" th:field="*{patient_pw}" placeholder="비밀번호 입력" required>
-    </div>
-    <div>
-        <label for="patient_name">이름</label>
-        <input type="text" id="patient_name" th:field="*{patient_name}" placeholder="이름 입력" required>
-    </div>
-    <div>
-        <label for="gender">성별</label>
-        <select id="gender" th:field="*{gender}" required>
-            <option value="">선택하세요</option>
-            <option value="남">남</option>
-            <option value="여">여</option>
-        </select>
-    </div>
-    <div>
-        <label for="age">나이</label>
-        <input type="number" id="age" th:field="*{age}" placeholder="나이 입력" required>
-    </div>
-    <div>
-        <label for="weight">체중</label>
-        <input type="number" id="weight" th:field="*{weight}" placeholder="체중 입력" required>
-    </div>
-    <div>
-        <label for="height">신장</label>
-        <input type="number" id="height" th:field="*{height}" placeholder="신장 입력" required>
-    </div>
-    <div>
-        <label for="blood_type">혈액형</label>
-        <select id="blood_type" th:field="*{blood_type}" required>
-            <option value="">선택하세요</option>
-            <option value="A">A형</option>
-            <option value="B">B형</option>
-            <option value="AB">AB형</option>
-            <option value="O">O형</option>
-        </select>
-    </div>
+</div>
 
-    <button type="submit">회원가입</button>
-</form>
+<footer class="footer py-3 bg-dark">
+    <div class="container text-center">
+        <span class="text-muted">© 2024 EMR Service. All rights reserved.</span>
+    </div>
+</footer>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>
