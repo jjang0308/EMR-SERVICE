@@ -2,35 +2,37 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Sign Up</title>
+    <title>Doctor Signup</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 <body>
-<h1>회원가입</h1>
-<hr>
-<form action="/doctor/signup" th:object="${doctor}" method="post">
-    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+<div class="container">
+    <h1>의사 회원가입</h1>
+    <form action="#" th:action="@{/doctor/signup}" th:object="${doctor}" method="post">
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
 
-    <div>
-        <label for="doctorLoginId">아이디</label>
-        <input type="text" id="doctorLoginId" th:field="*{doctorLoginId}" placeholder="아이디 입력" required>
-    </div>
-    <div>
-        <label for="doctor_pw">비밀번호</label>
-        <input type="password" id="doctor_pw" th:field="*{doctorPw}" placeholder="비밀번호 입력" required>
-    </div>
-    <div>
-        <label for="doctor_name">의사 이름</label>
-        <input type="text" id="doctor_name" th:field="*{doctorName}" placeholder="의사 이름 입력" required>
-    </div>
-    <div>
-        <label for="dept">부서</label>
-        <select id="dept" >
-            <option value="">선택하세요</option>
-            <option th:each="dept : ${depts}" th:value="${dept.deptId}" th:text="${dept.deptName}"></option>
-        </select>
-    </div>
-
-    <button type="submit">회원가입</button>
-</form>
+        <div class="form-group">
+            <label for="doctorLoginId">아이디</label>
+            <input type="text" class="form-control" id="doctorLoginId" th:field="*{doctorLoginId}" placeholder="아이디 입력" required>
+        </div>
+        <div class="form-group">
+            <label for="doctorPw">비밀번호</label>
+            <input type="password" class="form-control" id="doctorPw" th:field="*{doctorPw}" placeholder="비밀번호 입력" required>
+        </div>
+        <div class="form-group">
+            <label for="doctorName">의사 이름</label>
+            <input type="text" class="form-control" id="doctorName" th:field="*{doctorName}" placeholder="의사 이름 입력" required>
+        </div>
+        <div class="form-group">
+            <label for="dept">부서</label>
+            <select id="dept" class="form-control" th:field="*{deptId}" required>
+                <option value="">선택하세요</option>
+                <option th:each="dept : ${depts}" th:value="${dept.deptId}" th:text="${dept.deptName}"></option>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary">회원가입</button>
+    </form>
+</div>
 </body>
 </html>

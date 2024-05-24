@@ -1,7 +1,9 @@
 package WELCOME.EMRSERVICE.Service.Doctor;
 
+import WELCOME.EMRSERVICE.Domain.Doctor.Dept;
 import WELCOME.EMRSERVICE.Domain.Doctor.Doctor;
 import WELCOME.EMRSERVICE.Dto.Doctor.DoctorDto;
+import WELCOME.EMRSERVICE.Repository.Doctor.DeptRepository;
 import WELCOME.EMRSERVICE.Repository.Doctor.DoctorRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.Authentication;
@@ -19,6 +21,7 @@ import javax.transaction.Transactional;
 public class DoctorService implements UserDetailsService {
 
     private DoctorRepository doctorRepository;
+    private final DeptRepository deptRepository;
 
     @Transactional
     public String signUp(DoctorDto doctorDto) {
@@ -27,7 +30,10 @@ public class DoctorService implements UserDetailsService {
 
         doctorDto.setRoles("ROLE_DOCTOR");
 
-        Doctor doctor = doctorDto.toEntity();
+        Dept dept = deptRepository.findById(doctorDto.getDeptId())
+                .orElseThrow(() -> new IllegalArgumentException("부서를 찾을 수 없습니다."));
+
+        Doctor doctor = doctorDto.toEntity(dept);
         doctorRepository.save(doctor);
 
         // 저장한 사용자의 아이디를 반환
