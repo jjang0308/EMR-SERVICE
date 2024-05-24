@@ -14,6 +14,7 @@
         <thead>
         <tr>
             <th>환자 이름</th>
+            <th>부서</th>
             <th>의사 이름</th>
             <th>예약 시간</th>
             <th>취소</th>
@@ -22,6 +23,7 @@
         <tbody>
         <tr th:each="appointment : ${appointments}">
             <td th:text="${appointment.patient != null ? appointment.patient.patient_name : 'N/A'}">환자 이름</td>
+            <td th:text="${appointment.doctor != null && appointment.doctor.dept != null ? appointment.doctor.dept.deptName : 'N/A'}">부서</td>
             <td th:text="${appointment.doctor != null ? appointment.doctor.doctorName : 'N/A'}">의사 이름</td>
             <td th:text="${#temporals.format(appointment.appointmentDate, 'yyyy-MM-dd HH:mm')}">예약 시간</td>
             <td>
