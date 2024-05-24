@@ -34,11 +34,10 @@ public class AppointmentService {
             throw new IllegalArgumentException("이미 해당 시간에 예약이 있습니다.");
         }
 
-        Appointment appointment = Appointment.builder()
-                .patient(patient)
-                .doctor(doctor)
-                .appointmentDate(appointmentDate)
-                .build();
+        Appointment appointment = new Appointment();
+        appointment.setPatient(patient);
+        appointment.setDoctor(doctor);
+        appointment.setAppointmentDate(appointmentDate);
 
         return appointmentRepository.save(appointment);
     }

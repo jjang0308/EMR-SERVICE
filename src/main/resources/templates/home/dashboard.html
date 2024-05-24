@@ -23,6 +23,11 @@
     <a th:href="@{/member/updatePassword}">개인정보 수정</a>
     <a th:href="@{/member/delete}">회원 탈퇴</a>
     <a th:href="@{/member/book}">진료 예약</a>
+    <a th:href="@{/appointments/my}">진료 확인</a>
+</div>
+
+<div sec:authorize="hasRole('ADMIN')">
+    <a>Admin</a>
     <a th:href="@{/appointments/check}">진료 확인</a>
 </div>
 

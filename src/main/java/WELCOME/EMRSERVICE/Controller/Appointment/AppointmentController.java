@@ -3,13 +3,13 @@ package WELCOME.EMRSERVICE.Controller.Appointment;
 import WELCOME.EMRSERVICE.Domain.Appointment.Appointment;
 import WELCOME.EMRSERVICE.Service.Appointment.AppointmentService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
-
 
 @Controller
 @RequestMapping("/appointments")
@@ -23,16 +23,18 @@ public class AppointmentController {
     }
 
     @GetMapping("/new")
-    public String showAppointmentForm(Model model) {
+    public String showAppointmentForm(Model model, Authentication authentication) {
         model.addAttribute("appointment", new Appointment());
+        model.addAttribute("patientId", authentication.getName());
         return "/member/bookAppointment";
     }
 
     @PostMapping("/new")
-    public String createAppointment(@RequestParam String patientId,
-                                    @RequestParam String doctorId,
+    public String createAppointment(@RequestParam String doctorId,
                                     @RequestParam String appointmentDate,
+                                    Authentication authentication,
                                     Model model) {
+        String patientId = authentication.getName();
         LocalDateTime appointmentDateTime = LocalDateTime.parse(appointmentDate);
         try {
             appointmentService.createAppointment(patientId, doctorId, appointmentDateTime);
@@ -53,6 +55,14 @@ public class AppointmentController {
         }
         model.addAttribute("appointments", appointments);
         return "/member/listAppointments";
+    }
+
+    @GetMapping("/my")
+    public String listMyAppointments(Authentication authentication, Model model) {
+        String patientId = authentication.getName();
+        List<Appointment> appointments = appointmentService.getAppointmentsByPatient(patientId);
+        model.addAttribute("appointments", appointments);
+        return "/member/listMyAppointments";
     }
 
     @PostMapping("/cancel/{id}")

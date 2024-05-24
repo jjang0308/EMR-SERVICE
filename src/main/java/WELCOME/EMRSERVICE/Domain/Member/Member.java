@@ -1,11 +1,11 @@
 package WELCOME.EMRSERVICE.Domain.Member;
 
+import WELCOME.EMRSERVICE.Domain.Appointment;
+import WELCOME.EMRSERVICE.Domain.Registration.Registration;
 import lombok.*;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.List;
 
 @NoArgsConstructor(access= AccessLevel.PROTECTED)
 @Getter @Setter
@@ -22,11 +22,10 @@ public class Member {
     private String blood_type;
     private String patient_pw;
     private String patientLoginId;
-    private Long role_id;
     private String roles;
 
     @Builder
-    public Member(Long patient_id, String patient_name, String gender, int age, int weight, int height, String blood_type, String patient_pw, String patientLoginId,Long role_id,String roles) {
+    public Member(Long patient_id, String patient_name, String gender, int age, int weight, int height, String blood_type, String patient_pw, String patientLoginId,String roles) {
         this.patient_id = patient_id;
         this.patient_name = patient_name;
         this.gender = gender;
@@ -36,22 +35,14 @@ public class Member {
         this.blood_type = blood_type;
         this.patient_pw = patient_pw;
         this.patientLoginId = patientLoginId;
-        this.role_id=role_id;
         this.roles=roles;
     }
-
+    @OneToMany(mappedBy = "patient")
+    private List<Registration> registration;
     public void updatePassword(String newPassword) {
         this.patient_pw = newPassword;
     }
 
-
-
-
-
-
-
-
-
-
-
+    @OneToMany(mappedBy = "patient")
+    private List<Appointment> appointments;
 }
