@@ -18,6 +18,7 @@ public class Doctor {
     private String doctorPw;
     private String roles;
 
+
     @ManyToOne
     @JoinColumn(name = "dept_id")
     private Dept dept;
