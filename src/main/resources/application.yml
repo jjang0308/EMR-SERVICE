@@ -1,8 +1,8 @@
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/ryu?serverTimezone=UTC
-    username: ryu
-    password: 2005
+    url: jdbc:mysql://220.69.203.87:3306/EMR?serverTimezone=UTC
+    username: jh
+    password: 1234
     driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:
