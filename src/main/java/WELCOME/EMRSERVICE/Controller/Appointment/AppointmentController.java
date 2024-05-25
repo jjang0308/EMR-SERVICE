@@ -2,8 +2,11 @@ package WELCOME.EMRSERVICE.Controller.Appointment;
 
 import WELCOME.EMRSERVICE.Domain.Appointment.Appointment;
 import WELCOME.EMRSERVICE.Domain.Doctor.Doctor;
+import WELCOME.EMRSERVICE.Dto.Doctor.DoctorDto;
+import WELCOME.EMRSERVICE.Repository.Doctor.DeptRepository;
 import WELCOME.EMRSERVICE.Repository.Doctor.DoctorRepository;
 import WELCOME.EMRSERVICE.Service.Appointment.AppointmentService;
+import WELCOME.EMRSERVICE.Service.Doctor.DeptService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -19,19 +22,31 @@ public class AppointmentController {
 
     private final AppointmentService appointmentService;
     private final DoctorRepository doctorRepository;
+    private final DeptRepository deptRepository;
+
+    private final DeptService deptService;
 
     @Autowired
-    public AppointmentController(AppointmentService appointmentService, DoctorRepository doctorRepository) {
+    public AppointmentController(AppointmentService appointmentService, DoctorRepository doctorRepository, DeptRepository deptRepository, DeptService deptService) {
         this.appointmentService = appointmentService;
         this.doctorRepository = doctorRepository;
+        this.deptRepository = deptRepository;
+        this.deptService = deptService;
+
     }
 
     @GetMapping("/new")
     public String showAppointmentForm(Model model, Authentication authentication) {
         model.addAttribute("appointment", new Appointment());
         model.addAttribute("patientId", authentication.getName());
+        List<WELCOME.EMRSERVICE.Domain.Doctor.Dept> departments = deptService.getAllDepts();
+        model.addAttribute("depts", departments);
+        List<Doctor>doctors = doctorRepository.findAll();
+        model.addAttribute("doctors", doctors);
         return "/member/bookAppointment";
     }
+
+
 
     @PostMapping("/new")
     public String createAppointment(@RequestParam String doctorId,
