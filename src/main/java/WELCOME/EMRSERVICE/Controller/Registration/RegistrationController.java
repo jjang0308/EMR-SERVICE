@@ -1,6 +1,9 @@
 package WELCOME.EMRSERVICE.Controller.Registration;
 
 import WELCOME.EMRSERVICE.Domain.Registration.Registration;
+import WELCOME.EMRSERVICE.Repository.Doctor.DeptRepository;
+import WELCOME.EMRSERVICE.Repository.Doctor.DoctorRepository;
+import WELCOME.EMRSERVICE.Service.Doctor.DeptService;
 import WELCOME.EMRSERVICE.Service.Registration.RegistrationService;
 import lombok.AllArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -19,9 +22,15 @@ import java.util.List;
 public class RegistrationController {
 
     private final RegistrationService registrationService;
+    private final DeptRepository deptRepository;
+    private final DoctorRepository doctorRepository;
 
     @GetMapping("/member/book")
-    public String showBookingPage() {
+    public String showBookingPage(Model model) {
+        List<WELCOME.EMRSERVICE.Domain.Doctor.Dept> depts = deptRepository.findAll();
+        model.addAttribute("depts", depts);
+        List<WELCOME.EMRSERVICE.Domain.Doctor.Doctor> doctors = doctorRepository.findAll(); // 모든 의사 정보를 가져옵니다.
+        model.addAttribute("doctors", doctors);
         return "/member/bookAppointment";
     }
 
@@ -31,6 +40,7 @@ public class RegistrationController {
                                   @RequestParam("symptom") String symptom,
                                   @RequestParam("treat_time") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime treat_time) {
         String patientLoginId = authentication.getName();
+
         registrationService.bookAppointment(patientLoginId, dept_id, symptom, treat_time);
         return "redirect:/home/dashboard";
     }
@@ -49,4 +59,5 @@ public class RegistrationController {
         registrationService.cancelAppointment(appointmentId);
         return "redirect:/member/appointments";
     }
+
 }
