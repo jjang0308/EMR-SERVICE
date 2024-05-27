@@ -8,13 +8,18 @@ import WELCOME.EMRSERVICE.Repository.Doctor.DoctorRepository;
 import WELCOME.EMRSERVICE.Service.Appointment.AppointmentService;
 import WELCOME.EMRSERVICE.Service.Doctor.DeptService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeParseException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/appointments")
@@ -51,18 +56,43 @@ public class AppointmentController {
     @PostMapping("/new")
     public String createAppointment(@RequestParam String doctorId,
                                     @RequestParam String appointmentDate,
+                                    @RequestParam String deptId,
                                     Authentication authentication,
                                     Model model) {
         String patientId = authentication.getName();
         LocalDateTime appointmentDateTime = LocalDateTime.parse(appointmentDate);
         try {
             appointmentService.createAppointment(patientId, doctorId, appointmentDateTime);
-            return "redirect:/home/dashboard";  // 예약 후 대시보드로 리디렉션
-        } catch (IllegalArgumentException e) {
+            return "redirect:/home/dashboard";
+        } catch (RuntimeException e) {
             model.addAttribute("error", e.getMessage());
-            return "/member/bookAppointment";
+            model.addAttribute("selectedDeptId", deptId);
+            model.addAttribute("selectedDoctorId", doctorId);
+            model.addAttribute("selectedDate", appointmentDate.split("T")[0]);
+            model.addAttribute("depts", deptService.getAllDepts());
+            model.addAttribute("doctors", appointmentService.findDoctorsByDeptId(Long.parseLong(deptId)));
+            return "member/bookAppointment";
         }
     }
+
+
+    @GetMapping("/getDoctorsAndTimes")
+    public ResponseEntity<Map<String, Object>> getDoctorsAndTimes(@RequestParam String deptId, @RequestParam String date) {
+        try {
+            Long deptIdLong = Long.parseLong(deptId);
+            LocalDate localDate = LocalDate.parse(date);
+            List<DoctorDto> doctors = appointmentService.findDoctorsByDeptId(deptIdLong);
+            List<String> availableTimes = appointmentService.findAvailableTimesByDeptId(deptIdLong, localDate);
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("doctors", doctors);
+            response.put("times", availableTimes);
+            return ResponseEntity.ok(response);
+        } catch (NumberFormatException | DateTimeParseException e) {
+            return ResponseEntity.badRequest().body(null);
+        }
+    }
+
 
     @GetMapping("/check")
     public String listAppointments(@RequestParam(required = false) String patientId, Model model) {
@@ -81,17 +111,23 @@ public class AppointmentController {
         String patientId = authentication.getName();
         List<Appointment> appointments = appointmentService.getAppointmentsByPatient(patientId);
         model.addAttribute("appointments", appointments);
-        return "/member/listMyAppointments";
+        return "member/listMyAppointments";
     }
 
     @GetMapping("/doctor")
     public String listDoctorAppointments(Authentication authentication, Model model) {
         String doctorLoginId = authentication.getName();
         Doctor doctor = doctorRepository.findByDoctorLoginId(doctorLoginId);
+        if (doctor == null) {
+            model.addAttribute("error", "의사 정보를 찾을 수 없습니다.");
+            return "/doctor/listDoctorAppointments";
+        }
         List<Appointment> appointments = appointmentService.getAppointmentsByDoctor(doctor.getDoctorId());
         model.addAttribute("appointments", appointments);
         return "/doctor/listDoctorAppointments";
     }
+
+
 
     @PostMapping("/cancel/{id}")
     public String cancelAppointment(@PathVariable Long id) {
