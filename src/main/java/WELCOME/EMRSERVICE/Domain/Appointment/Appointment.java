@@ -20,6 +20,9 @@ public class Appointment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long appointment_id;
+    private boolean available;
+    private Long deptId;
+    private LocalDateTime date;
 
     @ManyToOne
     @JoinColumn(name = "patient_id")

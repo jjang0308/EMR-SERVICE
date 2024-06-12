@@ -111,4 +111,8 @@ public class AppointmentService {
         return availableTimes;
     }
 
+    public List<Appointment> getAppointments(Long deptId, LocalDate date) {
+        return appointmentRepository.findByDeptIdAndDate(deptId, date);
+    }
+
 }
