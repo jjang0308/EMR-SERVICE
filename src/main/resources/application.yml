@@ -1,9 +1,14 @@
 spring:
   datasource:
     url: jdbc:mysql://localhost:3306/ryu?serverTimezone=UTC
-    username: ryu
-    password: 2005
+    username: root
+    password: mite
     driver-class-name: com.mysql.cj.jdbc.Driver
+
+#    url: jdbc:mysql://220.69.203.87:3306/EMR?serverTimezone=UTC
+#    username: jh2
+#    password: 2005
+#    driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:
     hibernate:
