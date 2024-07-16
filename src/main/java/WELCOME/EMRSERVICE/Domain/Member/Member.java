@@ -2,6 +2,7 @@ package WELCOME.EMRSERVICE.Domain.Member;
 
 import WELCOME.EMRSERVICE.Domain.Appointment.Appointment;
 import WELCOME.EMRSERVICE.Domain.Registration.Registration;
+import WELCOME.EMRSERVICE.Dto.Member.MemberDto;
 import lombok.*;
 
 import javax.persistence.*;
@@ -23,6 +24,7 @@ public class Member {
     private String patient_pw;
     private String patientLoginId;
     private String roles;
+    private String type="app";
 
     @Builder
     public Member(Long patient_id, String patient_name, String gender, int age, int weight, int height, String blood_type, String patient_pw, String patientLoginId,String roles) {
@@ -37,6 +39,14 @@ public class Member {
         this.patientLoginId = patientLoginId;
         this.roles=roles;
     }
+    public Member(String patientLoginId,String type,String patient_name,String gender){
+        this.patientLoginId=patientLoginId;
+        this.patient_name=patient_name;
+        this.gender=gender;
+        this.patient_pw="password";
+        this.type=type;
+        this.roles="ROLE_MEMBER";
+    }
     @OneToMany(mappedBy = "patient")
     private List<Registration> registration;
     public void updatePassword(String newPassword) {
@@ -45,4 +55,5 @@ public class Member {
 
     @OneToMany(mappedBy = "patient")
     private List<Appointment> appointments;
+
 }
