@@ -1,13 +1,8 @@
 package WELCOME.EMRSERVICE.Config;
 
 
-import WELCOME.EMRSERVICE.Service.Doctor.DoctorService;
-import WELCOME.EMRSERVICE.Service.Member.MemberService;
-import WELCOME.EMRSERVICE.Service.OAuth.OAuth2SuccessHandler;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
@@ -16,7 +11,16 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
+import WELCOME.EMRSERVICE.Service.Doctor.DoctorService;
+import WELCOME.EMRSERVICE.Service.Member.MemberService;
+import WELCOME.EMRSERVICE.Service.OAuth.OAuth2SuccessHandler;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 
 @Configuration
 @EnableWebSecurity
@@ -38,10 +42,21 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    public PasswordEncoder passwordEncoder() {
+    public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
+    @Bean
+    public CorsFilter corsFilter() {
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        CorsConfiguration config = new CorsConfiguration();
+        config.setAllowCredentials(true);
+        config.addAllowedOrigin("http://localhost:3000"); // React 애플리케이션의 주소
+        config.addAllowedHeader("*");
+        config.addAllowedMethod("*");
+        source.registerCorsConfiguration("/**", config);
+        return new CorsFilter(source);
+    }
     @Override
     public void configure(WebSecurity web) throws Exception {
         // 인증을 무시하기 위한 설정
@@ -50,12 +65,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.cors().disable()
+        http
+                .cors().and()
+                .csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()).and()
                 .authorizeRequests()
+                .antMatchers("/api/csrf-token").permitAll()
+                .antMatchers("/api/doctor/signup").permitAll()
                 .antMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
                 .antMatchers("/home/signup").permitAll()
                 .antMatchers("/doctor/signup").permitAll()
                 .antMatchers("/member/signup").permitAll()
+                .antMatchers("/api/**").permitAll()
                 .antMatchers("/appointments/doctor").access("hasRole('ROLE_DOCTOR')")
                 .antMatchers("/doctor/**").access("hasRole('ROLE_DOCTOR')")
                 .antMatchers("/member/**").access("hasRole('ROLE_MEMBER')")
@@ -63,7 +83,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .logout()
                 .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
                 .logoutSuccessUrl("/")
-                .invalidateHttpSession(true) // 세션 초기화
+                .invalidateHttpSession(true)
                 .and()
                 .exceptionHandling()
                 .and()
