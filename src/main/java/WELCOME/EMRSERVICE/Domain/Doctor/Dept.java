@@ -1,5 +1,6 @@
 package WELCOME.EMRSERVICE.Domain.Doctor;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 
 import javax.persistence.*;
@@ -20,6 +21,7 @@ public class Dept {
         this.deptName = deptName;
     }
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "dept")
     private List<Doctor> doctors;
 }

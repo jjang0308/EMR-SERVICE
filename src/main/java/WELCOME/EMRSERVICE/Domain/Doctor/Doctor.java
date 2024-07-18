@@ -1,6 +1,7 @@
 package WELCOME.EMRSERVICE.Domain.Doctor;
 
 import WELCOME.EMRSERVICE.Domain.Appointment.Appointment;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.*;
 
 import javax.persistence.*;
@@ -20,6 +21,7 @@ public class Doctor {
 
 
     @ManyToOne
+    @JsonBackReference
     @JoinColumn(name = "dept_id")
     private Dept dept;
 
