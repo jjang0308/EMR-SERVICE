@@ -6,6 +6,7 @@ import WELCOME.EMRSERVICE.Dto.Doctor.DoctorDto;
 import WELCOME.EMRSERVICE.Repository.Doctor.DeptRepository;
 import WELCOME.EMRSERVICE.Repository.Doctor.DoctorRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -17,22 +18,34 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 
 @Service
-@AllArgsConstructor
 public class DoctorService implements UserDetailsService {
 
-    private DoctorRepository doctorRepository;
+    private final DoctorRepository doctorRepository;
     private final DeptRepository deptRepository;
+    private final BCryptPasswordEncoder passwordEncoder;
+
+    public DoctorService(DoctorRepository doctorRepository, DeptRepository deptRepository,  @Lazy BCryptPasswordEncoder passwordEncoder) {
+        this.doctorRepository = doctorRepository;
+        this.deptRepository = deptRepository;
+        this.passwordEncoder = passwordEncoder;
+    }
 
     @Transactional
     public String signUp(DoctorDto doctorDto) {
-        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        doctorDto.setDoctorPw(passwordEncoder.encode(doctorDto.getDoctorPw()));
+        // 중복된 아이디 체크
+        if (doctorRepository.existsByDoctorLoginId(doctorDto.getDoctorLoginId())) {
+            throw new IllegalArgumentException("이미 존재하는 아이디입니다.");
+        }
 
+        // 비밀번호 암호화
+        doctorDto.setDoctorPw(passwordEncoder.encode(doctorDto.getDoctorPw()));
         doctorDto.setRoles("ROLE_DOCTOR");
 
+        // 부서 찾기
         Dept dept = deptRepository.findById(doctorDto.getDeptId())
                 .orElseThrow(() -> new IllegalArgumentException("부서를 찾을 수 없습니다."));
 
+        // 의사 정보 저장
         Doctor doctor = doctorDto.toEntity(dept);
         doctorRepository.save(doctor);
 
