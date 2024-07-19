@@ -3,99 +3,95 @@ package WELCOME.EMRSERVICE.Controller.Member;
 import WELCOME.EMRSERVICE.Dto.Member.MemberDto;
 import WELCOME.EMRSERVICE.Dto.Registration.RegistrationDto;
 import WELCOME.EMRSERVICE.Service.Member.MemberService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Map;
 
-@Controller
+@RestController
+@CrossOrigin(origins = "http://localhost:3000")
+@RequestMapping("/api/member")
 @AllArgsConstructor
 public class MemberController {
     private final MemberService memberService;
 
     @GetMapping("/")
-    public String index() {
-        return "home/index";
+    public ResponseEntity<String> index() {
+        return ResponseEntity.ok("Welcome to the Home Page");
+    }
+
+    @GetMapping("/choiceMember")
+    public ResponseEntity<String> choiceMember() {
+        return ResponseEntity.ok("Choice Member Signup Page");
+    }
+
+    @GetMapping("/signup")
+    public ResponseEntity<MemberDto> signupForm() {
+        return ResponseEntity.ok(new MemberDto());
+    }
+
+    @PostMapping("/signup")
+    public ResponseEntity<String> signup(@RequestBody Map<String, Object> request) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        MemberDto memberDto = objectMapper.convertValue(request.get("memberDto"), MemberDto.class);
+        RegistrationDto registrationDto = objectMapper.convertValue(request.get("registrationDto"), RegistrationDto.class);
+
+        memberService.signUp(memberDto, registrationDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body("Member signed up successfully");
     }
 
 
-    @GetMapping("/member/choiceMember")
-    public String choiceMember() {
-        return "home/choiceMember_signup";
+    @GetMapping("/dashboard")
+    public ResponseEntity<String> dashboard() {
+        return ResponseEntity.ok("Member Dashboard");
     }
 
-    @GetMapping("/member/signup")
-    public String signupForm(Model model) {
-        model.addAttribute("member", new MemberDto());
-        return "member/signupForm";
+    @GetMapping("/login")
+    public ResponseEntity<String> loginPage() {
+        return ResponseEntity.ok("Login Page");
     }
 
-
-    @PostMapping("/member/signup")
-    public String signup(MemberDto memberDto,RegistrationDto registrationDto) {
-        memberService.signUp(memberDto,registrationDto);
-        return "redirect:/";
-    }
-    @GetMapping("/member/dashboard")
-    public String dashboard() {
-        return "/member/dashboard";
-    }
-    @GetMapping("/member/login")
-    public String loginPage() {
-        // GET 요청에 대한 로그인 페이지를 반환합니다.
-        return "/home/loginForm";
-    }
-    @PostMapping("/member/login")
-    public String login(HttpServletRequest request, RedirectAttributes redirectAttributes) {
-        // 인증 객체 가져오기
+    @PostMapping("/login")
+    public ResponseEntity<String> login(HttpServletRequest request) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         if (authentication == null || !authentication.isAuthenticated() || authentication.getAuthorities().isEmpty()) {
-            System.out.println("사용자가 인증되지 않았거나, 권한이 없습니다.");
-
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User is not authenticated or has no authorities");
         }
-        System.out.println("authentication = " + authentication);
-        // 사용자의 권한을 확인합니다.
+
         for (GrantedAuthority authority : authentication.getAuthorities()) {
-            System.out.println("사용자의 권한: " + authority.getAuthority());
+            System.out.println("User authority: " + authority.getAuthority());
         }
-        // 인증이 성공한 경우
-        if (authentication != null && authentication.isAuthenticated()) {
-            // 사용자의 권한 체크
-            if (authentication.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_MEMBER"))) {
-                // 의사 대시보드로 리다이렉트
-                return "redirect:/member/dashboard";
-            }
+
+        if (authentication.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_MEMBER"))) {
+            return ResponseEntity.ok("Redirect to member dashboard");
         }
-        // 인증이 실패하거나 권한이 없는 경우
-        redirectAttributes.addFlashAttribute("error", "의사 계정으로 로그인할 수 없습니다.");
-        return "redirect:/member/login";
+
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Cannot login with member account");
     }
 
-    @GetMapping("/member/updatePassword")
-    public String updatePassword(Model model) {
-        return "/member/updatePassword";
+    @GetMapping("/updatePassword")
+    public ResponseEntity<String> updatePasswordForm() {
+        return ResponseEntity.ok("Update Password Page");
     }
 
-    @PostMapping("/member/updatePassword")
-    public String updatePassword(MemberDto memberDto,
-                                 @RequestParam("currentPassword") String currentPassword,
-                                 @RequestParam("newPassword") String newPassword,
-                                 @RequestParam("confirmPassword") String confirmPassword) {
+    @PostMapping("/updatePassword")
+    public ResponseEntity<String> updatePassword(@RequestBody MemberDto memberDto,
+                                                 @RequestParam("currentPassword") String currentPassword,
+                                                 @RequestParam("newPassword") String newPassword,
+                                                 @RequestParam("confirmPassword") String confirmPassword) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         if (authentication == null || !authentication.isAuthenticated()) {
-            // 인증 정보가 없거나 인증되지 않은 경우 처리
-            return "redirect:/login"; // 로그인 페이지로 리다이렉트
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User is not authenticated");
         }
 
         Object principal = authentication.getPrincipal();
@@ -110,30 +106,24 @@ public class MemberController {
         try {
             memberService.modify(loginId, currentPassword, newPassword, confirmPassword);
         } catch (IllegalArgumentException e) {
-            // 에러 처리
-            return "redirect:/error";
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
 
-        return "redirect:/";
+        return ResponseEntity.ok("Password updated successfully");
     }
 
-
-
-    @GetMapping("/member/delete")
-    public String delete() {
-        return "/member/delete";
+    @GetMapping("/delete")
+    public ResponseEntity<String> deleteForm() {
+        return ResponseEntity.ok("Delete Member Page");
     }
-    @PostMapping("/member/delete")
-    public String deleteMember(@RequestParam("password") String password, RedirectAttributes redirectAttributes) {
+
+    @PostMapping("/delete")
+    public ResponseEntity<String> deleteMember(@RequestParam("password") String password) {
         try {
             memberService.deleteMember(password);
-            redirectAttributes.addFlashAttribute("success", "회원 탈퇴가 완료되었습니다.");
-            return "redirect:/logout";
+            return ResponseEntity.ok("Member deleted successfully");
         } catch (IllegalArgumentException e) {
-            redirectAttributes.addFlashAttribute("error", e.getMessage());
-            return "redirect:/member/delete"; // 탈퇴 실패 시 다시 탈퇴 페이지로 이동
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
-
-
 }

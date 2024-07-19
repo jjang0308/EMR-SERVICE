@@ -35,7 +35,7 @@ public class MemberService implements UserDetailsService {
     @Transactional
     public String signUp(MemberDto memberDto,RegistrationDto registrationDto) {
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        memberDto.setPatient_pw(passwordEncoder.encode(memberDto.getPatient_pw()));
+        memberDto.setPatientPw(passwordEncoder.encode(memberDto.getPatientPw()));
         memberDto.setRoles("ROLE_MEMBER");
 
         Member member = memberDto.toEntity();
@@ -80,7 +80,7 @@ public class MemberService implements UserDetailsService {
         }
 
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        if (!passwordEncoder.matches(currentPassword, memberEntity.getPatient_pw())) {
+        if (!passwordEncoder.matches(currentPassword, memberEntity.getPatientPw())) {
             throw new IllegalArgumentException("현재 비밀번호가 일치하지 않습니다.");
         }
 
@@ -99,7 +99,7 @@ public class MemberService implements UserDetailsService {
         Member memberEntity = memberRepository.findByPatientLoginId(loginId);
 
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        if (!passwordEncoder.matches(password, memberEntity.getPatient_pw())) {
+        if (!passwordEncoder.matches(password, memberEntity.getPatientPw())) {
             throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
         }
 
