@@ -10,42 +10,42 @@ import lombok.Setter;
 @NoArgsConstructor
 public class MemberDto {
     private Long patient_id;
-    private String patient_name;
+    private String patientName;
     private String gender;
     private int age;
     private int weight;
     private int height;
-    private String blood_type;
-    private String patient_pw;
-    private String patient_login_id;
+    private String bloodType;
+    private String patientPw;
+    private String patientLoginId;
     private String roles;
 
     public Member toEntity() {
         return Member.builder()
                 .patient_id(patient_id)
-                .patient_name(patient_name)
+                .patientName(patientName)
                 .gender(gender)
                 .age(age)
                 .weight(weight)
                 .height(height)
-                .blood_type(blood_type)
-                .patient_pw(patient_pw)
-                .patientLoginId(patient_login_id)
+                .bloodType(bloodType)
+                .patientPw(patientPw)
+                .patientLoginId(patientLoginId)
                 .roles(roles)
                 .build();
     }
 
     @Builder
-    public MemberDto(Long patient_id, String patient_name, String gender, int age, int height, int weight, String blood_type, String patient_login_id, String patient_pw,String roles) {
+    public MemberDto(Long patient_id, String patientName, String gender, int age, int height, int weight, String bloodType, String patientLoginId, String patientPw,String roles) {
         this.patient_id = patient_id;
-        this.patient_name = patient_name;
+        this.patientName = patientName;
         this.gender = gender;
         this.age = age;
         this.weight = weight;
         this.height = height;
-        this.blood_type = blood_type;
-        this.patient_pw = patient_pw;
-        this.patient_login_id = patient_login_id;
+        this.bloodType = bloodType;
+        this.patientPw = patientPw;
+        this.patientLoginId = patientLoginId;
         this.roles=roles;
 
     }

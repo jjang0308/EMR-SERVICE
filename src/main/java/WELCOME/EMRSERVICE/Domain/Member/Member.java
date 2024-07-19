@@ -15,42 +15,42 @@ public class Member {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long patient_id;
-    private String patient_name;
+    private String patientName;
     private String gender;
     private int age;
     private int weight;
     private int height;
-    private String blood_type;
-    private String patient_pw;
+    private String bloodType;
+    private String patientPw;
     private String patientLoginId;
     private String roles;
     private String type="app";
 
     @Builder
-    public Member(Long patient_id, String patient_name, String gender, int age, int weight, int height, String blood_type, String patient_pw, String patientLoginId,String roles) {
+    public Member(Long patient_id, String patientName, String gender, int age, int weight, int height, String bloodType, String patientPw, String patientLoginId,String roles) {
         this.patient_id = patient_id;
-        this.patient_name = patient_name;
+        this.patientName = patientName;
         this.gender = gender;
         this.age = age;
         this.weight = weight;
         this.height = height;
-        this.blood_type = blood_type;
-        this.patient_pw = patient_pw;
+        this.bloodType = bloodType;
+        this.patientPw = patientPw;
         this.patientLoginId = patientLoginId;
         this.roles=roles;
     }
-    public Member(String patientLoginId,String type,String patient_name,String gender){
+    public Member(String patientLoginId,String type,String patientName,String gender){
         this.patientLoginId=patientLoginId;
-        this.patient_name=patient_name;
+        this.patientName=patientName;
         this.gender=gender;
-        this.patient_pw="password";
+        this.patientPw="password";
         this.type=type;
         this.roles="ROLE_MEMBER";
     }
     @OneToMany(mappedBy = "patient")
     private List<Registration> registration;
     public void updatePassword(String newPassword) {
-        this.patient_pw = newPassword;
+        this.patientPw = newPassword;
     }
 
     @OneToMany(mappedBy = "patient")
