@@ -1,30 +1,30 @@
 package WELCOME.EMRSERVICE.Controller.MainController;
 
 import lombok.AllArgsConstructor;
-import org.springframework.stereotype.Controller;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller
-@AllArgsConstructor
+
+@RestController
+@RequestMapping("/api/main")
+@CrossOrigin(origins = "http://localhost:3000")
 public class MainController {
 
-    @GetMapping("/home/loginForm")
-    public String choiceMember_loginForm() {
-        return "/home/loginForm";
+    @GetMapping("/loginForm")
+    public ResponseEntity<String> choiceMember_loginForm() {
+        return ResponseEntity.ok("Login Form");
     }
 
-    @GetMapping("/home/choiceMember")
-    public String choiceMember() {
-        return "/home/choiceMember_signup";
+    @GetMapping("/choiceMember")
+    public ResponseEntity<String> choiceMember() {
+        return ResponseEntity.ok("Choice Member Signup");
     }
 
-
-    @GetMapping("/home/dashboard")
-    public String dashboard() {
-        return "/home/dashboard";
+    @GetMapping("/dashboard")
+    public ResponseEntity<String> dashboard() {
+        return ResponseEntity.ok("Dashboard");
     }
-
-
-
-
 }
