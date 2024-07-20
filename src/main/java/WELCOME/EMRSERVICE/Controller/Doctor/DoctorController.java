@@ -1,13 +1,19 @@
 package WELCOME.EMRSERVICE.Controller.Doctor;
 
+import WELCOME.EMRSERVICE.Config.JwtTokenUtil;
 import WELCOME.EMRSERVICE.Domain.Doctor.Dept;
 import WELCOME.EMRSERVICE.Dto.Doctor.DoctorDto;
 import WELCOME.EMRSERVICE.Repository.Doctor.DeptRepository;
 import WELCOME.EMRSERVICE.Service.Doctor.DeptService;
 import WELCOME.EMRSERVICE.Service.Doctor.DoctorService;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,16 +21,21 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping("/api/doctor")
 @AllArgsConstructor
 public class DoctorController {
+
+    private AuthenticationManager authenticationManager;
     private final DoctorService doctorService;
     private final DeptRepository deptRepository;
     private final DeptService deptService;
 
+    @Autowired
+    private JwtTokenUtil jwtTokenUtil;
     @GetMapping("/dashboard")
     public ResponseEntity<String> dashboard() {
         return ResponseEntity.ok("Doctor Dashboard");
@@ -42,31 +53,30 @@ public class DoctorController {
         return ResponseEntity.ok(dept);
     }
 
-    @GetMapping("/login")
-    public ResponseEntity<String> loginPage() {
-        return ResponseEntity.ok("Login Page");
-    }
-
     @PostMapping("/login")
-    public ResponseEntity<?> login(HttpServletRequest request) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    public ResponseEntity<?> login(@RequestBody Map<String, String> loginData) {
+        try {
+            String doctorLoginId = loginData.get("doctorLoginId");
+            String doctorPw = loginData.get("doctorPw");
 
-        if (authentication == null || !authentication.isAuthenticated() || authentication.getAuthorities().isEmpty()) {
-            return ResponseEntity.status(401).body("Unauthorized");
-        }
+            UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(doctorLoginId, doctorPw);
+            Authentication authentication = authenticationManager.authenticate(authToken);
 
-        for (GrantedAuthority authority : authentication.getAuthorities()) {
-            System.out.println("사용자의 권한: " + authority.getAuthority());
-        }
+            SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        if (authentication != null && authentication.isAuthenticated()) {
-            if (authentication.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_DOCTOR"))) {
-                return ResponseEntity.ok("Redirect to Doctor Dashboard");
+            UserDetails userDetails = doctorService.loadUserByUsername(doctorLoginId);
+            if (userDetails.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_DOCTOR"))) {
+                // JWT 토큰 생성 부분
+                String jwtToken = jwtTokenUtil.generateToken(userDetails);
+                return ResponseEntity.ok().body(Map.of("message", "Redirect to doctor dashboard", "token", jwtToken));
+            } else {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Cannot login with doctor account");
             }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username or password");
         }
-
-        return ResponseEntity.status(403).body("Forbidden");
     }
+
 
     @GetMapping("/updatePassword")
     public ResponseEntity<String> updatePasswordPage() {
