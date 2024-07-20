@@ -1,26 +1,27 @@
 package WELCOME.EMRSERVICE.Config;
 
-
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.springframework.web.filter.CorsFilter;
 import WELCOME.EMRSERVICE.Service.Doctor.DoctorService;
 import WELCOME.EMRSERVICE.Service.Member.MemberService;
 import WELCOME.EMRSERVICE.Service.OAuth.OAuth2SuccessHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.web.filter.CorsFilter;
+
+import java.util.Arrays;
 
 @Configuration
 @EnableWebSecurity
@@ -57,10 +58,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         source.registerCorsConfiguration("/**", config);
         return new CorsFilter(source);
     }
+
     @Override
     public void configure(WebSecurity web) throws Exception {
         // 인증을 무시하기 위한 설정
-        web.ignoring().antMatchers("/static/css/**","/js/**","/img/**","/lib/**");
+        web.ignoring().antMatchers("/static/css/**", "/js/**", "/img/**", "/lib/**");
     }
 
     @Override
@@ -69,45 +71,57 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .cors().and()
                 .csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()).and()
                 .authorizeRequests()
-                .antMatchers("/api/**").permitAll()
-                .antMatchers("/api/csrf-token").permitAll()
-                .antMatchers("/api/doctor/signup").permitAll()
-                .antMatchers("/api/member/signup").permitAll()
+                .antMatchers("/api/csrf-token", "/api/doctor/signup", "/api/member/signup", "/api/member/login","/api/doctor/login").permitAll()
                 .antMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
-                .antMatchers("/home/signup").permitAll()
-                .antMatchers("/doctor/signup").permitAll()
-                .antMatchers("/member/signup").permitAll()
-                .antMatchers("/appointments/doctor").access("hasRole('ROLE_DOCTOR')")
-                .antMatchers("/doctor/**").access("hasRole('ROLE_DOCTOR')")
-                .antMatchers("/member/**").access("hasRole('ROLE_MEMBER')")
+                .antMatchers("/appointments/doctor").hasRole("DOCTOR")
+                .antMatchers("/doctor/**").hasRole("DOCTOR")
+                .antMatchers("/member/**").hasRole("MEMBER")
+                .anyRequest().authenticated()
                 .and()
-                .logout()
-                .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-                .logoutSuccessUrl("/")
-                .invalidateHttpSession(true)
-                .and()
-                .exceptionHandling()
-                .and()
-                .oauth2Login(oauth2 -> oauth2
-                        .authorizationEndpoint(endpoint -> endpoint.baseUri("/api/v1/auth/oauth2"))
-                        .redirectionEndpoint(endpoint -> endpoint.baseUri("/oauth2/callback/*"))
-                        .userInfoEndpoint(endpoint -> endpoint.userService(oAuth2UserService))
-                        .successHandler(oAuth2SuccessHandler)
-                )
                 .formLogin()
                 .loginPage("/login")
                 .loginProcessingUrl("/login")
-                .defaultSuccessUrl("/home/dashboard", true)
-                .permitAll();
+                .permitAll()
+                .and()
+                .logout()
+                .logoutUrl("/logout")
+                .logoutSuccessUrl("/")
+                .invalidateHttpSession(true)
+                .and()
+                .oauth2Login()
+                .authorizationEndpoint()
+                .baseUri("/api/v1/auth/oauth2")
+                .and()
+                .redirectionEndpoint()
+                .baseUri("/oauth2/callback/*")
+                .and()
+                .userInfoEndpoint()
+                .userService(oAuth2UserService)
+                .and()
+                .successHandler(oAuth2SuccessHandler);
     }
 
-
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000"));
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type", "X-XSRF-TOKEN"));
+        configuration.setAllowCredentials(true);
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
+    }
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        // 로그인 처리를 하기 위한 AuthenticationManagerBuilder를 설정
         auth.userDetailsService(memberService).passwordEncoder(passwordEncoder());
         auth.userDetailsService(doctorService).passwordEncoder(passwordEncoder());
     }
 
+    @Bean
+    @Override
+    public AuthenticationManager authenticationManagerBean() throws Exception {
+        return super.authenticationManagerBean();
+    }
 }
