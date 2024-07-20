@@ -31,35 +31,23 @@ public class MemberService implements UserDetailsService {
     private DoctorRepository doctorRepository;
     private RegistrationRepository registrationRepository;
 
-    // 회원가입
-    @Transactional
-    public String signUp(MemberDto memberDto,RegistrationDto registrationDto) {
-        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        memberDto.setPatientPw(passwordEncoder.encode(memberDto.getPatientPw()));
-        memberDto.setRoles("ROLE_MEMBER");
-
-        Member member = memberDto.toEntity();
-        memberRepository.save(member);
-
-        // 저장한 사용자의 아이디를 반환
-        return member.getPatientLoginId();
-    }
-
-
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Member memberEntity = memberRepository.findByPatientLoginId(username);
-        Doctor doctorEntity = doctorRepository.findByDoctorLoginId(username);
-
-        if (memberEntity != null) { // 환자인 경우
-            List<GrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority(Role.MEMBER.getRole()));
-            return new MemberPrincipalDetails(memberEntity);
-        } else if (doctorEntity != null) { // 의사인 경우
-            List<GrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority(Role.DOCTOR.getRole()));
-            return new DoctorPrincipalDetails(doctorEntity);
-        } else { // 사용자가 존재하지 않는 경우
+        if (memberEntity == null) {
             throw new UsernameNotFoundException("사용자를 찾을 수 없습니다: " + username);
         }
+        System.out.println("Found user: " + memberEntity.getPatientLoginId());
+        return new MemberPrincipalDetails(memberEntity);
+    }
+
+    @Transactional
+    public String signUp(Member member) {
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        member.setPatientPw(passwordEncoder.encode(member.getPatientPw()));
+        member.setRoles("ROLE_MEMBER");
+        memberRepository.save(member);
+        return member.getPatientLoginId();
     }
 
 
