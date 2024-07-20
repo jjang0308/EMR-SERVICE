@@ -72,9 +72,8 @@ public class MemberController {
 
             UserDetails userDetails = memberService.loadUserByUsername(patientLoginId);
             if (userDetails.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_MEMBER"))) {
-                // JWT 토큰 생성 부분
                 String jwtToken = jwtTokenUtil.generateToken(userDetails);
-                return ResponseEntity.ok().body(Map.of("message", "Redirect to member dashboard", "token", jwtToken));
+                return ResponseEntity.ok().body(Map.of("message", "Redirect to member dashboard", "token", jwtToken, "role", "MEMBER"));
             } else {
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Cannot login with member account");
             }
@@ -82,6 +81,8 @@ public class MemberController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username or password");
         }
     }
+
+
 
 
 
