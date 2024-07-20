@@ -1,13 +1,17 @@
 package WELCOME.EMRSERVICE.Controller.Member;
 
+import WELCOME.EMRSERVICE.Config.JwtTokenUtil;
+import WELCOME.EMRSERVICE.Domain.Member.Member;
 import WELCOME.EMRSERVICE.Dto.Member.MemberDto;
-import WELCOME.EMRSERVICE.Dto.Registration.RegistrationDto;
 import WELCOME.EMRSERVICE.Service.Member.MemberService;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -16,12 +20,18 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 
+
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping("/api/member")
 @AllArgsConstructor
 public class MemberController {
+
+
+    private AuthenticationManager authenticationManager;
     private final MemberService memberService;
+    @Autowired
+    private JwtTokenUtil jwtTokenUtil;
 
     @GetMapping("/")
     public ResponseEntity<String> index() {
@@ -33,19 +43,14 @@ public class MemberController {
         return ResponseEntity.ok("Choice Member Signup Page");
     }
 
-    @GetMapping("/signup")
-    public ResponseEntity<MemberDto> signupForm() {
-        return ResponseEntity.ok(new MemberDto());
-    }
-
     @PostMapping("/signup")
-    public ResponseEntity<String> signup(@RequestBody Map<String, Object> request) {
-        ObjectMapper objectMapper = new ObjectMapper();
-        MemberDto memberDto = objectMapper.convertValue(request.get("memberDto"), MemberDto.class);
-        RegistrationDto registrationDto = objectMapper.convertValue(request.get("registrationDto"), RegistrationDto.class);
-
-        memberService.signUp(memberDto, registrationDto);
-        return ResponseEntity.status(HttpStatus.CREATED).body("Member signed up successfully");
+    public ResponseEntity<String> signup(@RequestBody Member member) {
+        try {
+            memberService.signUp(member);
+            return ResponseEntity.ok("회원가입이 성공적으로 완료되었습니다.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("회원가입 중 오류가 발생했습니다.");
+        }
     }
 
 
@@ -54,29 +59,31 @@ public class MemberController {
         return ResponseEntity.ok("Member Dashboard");
     }
 
-    @GetMapping("/login")
-    public ResponseEntity<String> loginPage() {
-        return ResponseEntity.ok("Login Page");
-    }
-
     @PostMapping("/login")
-    public ResponseEntity<String> login(HttpServletRequest request) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    public ResponseEntity<?> login(@RequestBody Map<String, String> loginData) {
+        try {
+            String patientLoginId = loginData.get("patientLoginId");
+            String patientPw = loginData.get("patientPw");
 
-        if (authentication == null || !authentication.isAuthenticated() || authentication.getAuthorities().isEmpty()) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User is not authenticated or has no authorities");
+            UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(patientLoginId, patientPw);
+            Authentication authentication = authenticationManager.authenticate(authToken);
+
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+
+            UserDetails userDetails = memberService.loadUserByUsername(patientLoginId);
+            if (userDetails.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_MEMBER"))) {
+                // JWT 토큰 생성 부분
+                String jwtToken = jwtTokenUtil.generateToken(userDetails);
+                return ResponseEntity.ok().body(Map.of("message", "Redirect to member dashboard", "token", jwtToken));
+            } else {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Cannot login with member account");
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username or password");
         }
-
-        for (GrantedAuthority authority : authentication.getAuthorities()) {
-            System.out.println("User authority: " + authority.getAuthority());
-        }
-
-        if (authentication.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_MEMBER"))) {
-            return ResponseEntity.ok("Redirect to member dashboard");
-        }
-
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Cannot login with member account");
     }
+
+
 
     @GetMapping("/updatePassword")
     public ResponseEntity<String> updatePasswordForm() {
