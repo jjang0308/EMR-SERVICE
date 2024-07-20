@@ -2,9 +2,11 @@ package WELCOME.EMRSERVICE.Service.Doctor;
 
 import WELCOME.EMRSERVICE.Domain.Doctor.Dept;
 import WELCOME.EMRSERVICE.Domain.Doctor.Doctor;
+import WELCOME.EMRSERVICE.Domain.Member.Member;
 import WELCOME.EMRSERVICE.Dto.Doctor.DoctorDto;
 import WELCOME.EMRSERVICE.Repository.Doctor.DeptRepository;
 import WELCOME.EMRSERVICE.Repository.Doctor.DoctorRepository;
+import WELCOME.EMRSERVICE.Service.Member.MemberPrincipalDetails;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.Authentication;
@@ -55,7 +57,12 @@ public class DoctorService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return null;
+        Doctor doctorEntity = doctorRepository.findByDoctorLoginId(username);
+        if (doctorEntity == null) {
+            throw new UsernameNotFoundException("사용자를 찾을 수 없습니다: " + username);
+        }
+        System.out.println("Found user: " + doctorEntity.getDoctorLoginId());
+        return new DoctorPrincipalDetails(doctorEntity);
     }
 
     @Transactional
