@@ -66,9 +66,8 @@ public class DoctorController {
 
             UserDetails userDetails = doctorService.loadUserByUsername(doctorLoginId);
             if (userDetails.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_DOCTOR"))) {
-                // JWT 토큰 생성 부분
                 String jwtToken = jwtTokenUtil.generateToken(userDetails);
-                return ResponseEntity.ok().body(Map.of("message", "Redirect to doctor dashboard", "token", jwtToken));
+                return ResponseEntity.ok().body(Map.of("message", "Redirect to doctor dashboard", "token", jwtToken, "role", "DOCTOR"));
             } else {
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Cannot login with doctor account");
             }
@@ -76,6 +75,7 @@ public class DoctorController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username or password");
         }
     }
+
 
 
     @GetMapping("/updatePassword")
