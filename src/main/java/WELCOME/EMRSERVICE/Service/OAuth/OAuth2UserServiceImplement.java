@@ -43,7 +43,7 @@ public class OAuth2UserServiceImplement extends DefaultOAuth2UserService {
             member = memberRepository.findByPatientLoginId(patientLoginId);
             if (member == null) {
                 member = new Member(patientLoginId, "kakao", nickname, gender);
-                member.setPatient_pw(passwordEncoder.encode(member.getPatient_pw()));
+                member.setPatientPw(passwordEncoder.encode(member.getPatientPw()));
                 memberRepository.save(member);
             }
 
@@ -65,7 +65,7 @@ public class OAuth2UserServiceImplement extends DefaultOAuth2UserService {
                 member = memberRepository.findByPatientLoginId(patientLoginId);
                 if (member == null) {
                     member = new Member(patientLoginId, "naver", nickname, gender);
-                    member.setPatient_pw(passwordEncoder.encode(member.getPatient_pw()));
+                    member.setPatientPw(passwordEncoder.encode(member.getPatientPw()));
                     memberRepository.save(member);
                 }
 
@@ -88,7 +88,7 @@ public class OAuth2UserServiceImplement extends DefaultOAuth2UserService {
             member = memberRepository.findByPatientLoginId(patientLoginId);
             if (member == null) {
                 member = new Member(patientLoginId, "google", nickname, gender);
-                member.setPatient_pw(passwordEncoder.encode("password"));
+                member.setPatientPw(passwordEncoder.encode("password"));
                 memberRepository.save(member);
             }
 
