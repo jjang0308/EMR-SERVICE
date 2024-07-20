@@ -26,7 +26,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
 //        response.sendRedirect("http://localhost:3000/auth/oauth-response/" + token + "/3600");
 
-        String targetUrl = "/home/dashboard";
+        String targetUrl = "http://localhost:3000/member/dashboard";
 
         getRedirectStrategy().sendRedirect(request, response, targetUrl);
 
