@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -25,6 +26,11 @@ public class ReservationController {
         Map<String, Boolean> response = new HashMap<>();
         response.put("available", available);
         return response;
+    }
+
+    @GetMapping("/reservations")
+    public List<Reservation> getAllReservations() {
+        return reservationService.getAllReservations();
     }
 
     @PostMapping("/reserve")

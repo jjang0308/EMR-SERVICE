@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -18,6 +19,10 @@ public class ReservationService {
         return existingReservation.isEmpty();
     }
 
+    public List<Reservation> getAllReservations() {
+        return reservationRepository.findAll();
+    }
+
     public Reservation makeReservation(LocalDate date, LocalTime time) {
         if (isAvailable(date, time)) {
             Reservation reservation = new Reservation();
@@ -29,4 +34,3 @@ public class ReservationService {
         }
     }
 }
-
