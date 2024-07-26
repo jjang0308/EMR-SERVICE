@@ -39,4 +39,15 @@ public class ReservationController {
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.TIME) LocalTime time) {
         return reservationService.makeReservation(date, time);
     }
+
+    @GetMapping("/available-times")
+    public List<LocalTime> getAvailableTimes(
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+        return reservationService.getAvailableTimes(date);
+    }
+
+    @GetMapping("/fully-booked-dates")
+    public List<LocalDate> getFullyBookedDates() {
+        return reservationService.getFullyBookedDates();
+    }
 }
