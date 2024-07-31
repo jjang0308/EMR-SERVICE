@@ -9,7 +9,7 @@ import lombok.Setter;
 @Getter @Setter
 @NoArgsConstructor
 public class MemberDto {
-    private Long patient_id;
+    private Long patientId;
     private String patientName;
     private String gender;
     private int age;
@@ -22,7 +22,7 @@ public class MemberDto {
 
     public Member toEntity() {
         return Member.builder()
-                .patient_id(patient_id)
+                .patientId(patientId)
                 .patientName(patientName)
                 .gender(gender)
                 .age(age)
@@ -36,8 +36,8 @@ public class MemberDto {
     }
 
     @Builder
-    public MemberDto(Long patient_id, String patientName, String gender, int age, int height, int weight, String bloodType, String patientLoginId, String patientPw,String roles) {
-        this.patient_id = patient_id;
+    public MemberDto(Long patientId, String patientName, String gender, int age, int height, int weight, String bloodType, String patientLoginId, String patientPw,String roles) {
+        this.patientId = patientId;
         this.patientName = patientName;
         this.gender = gender;
         this.age = age;

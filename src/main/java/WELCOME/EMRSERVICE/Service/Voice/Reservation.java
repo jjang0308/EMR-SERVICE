@@ -33,6 +33,6 @@ public class Reservation {
     private Dept dept;
 
     @ManyToOne
-    @JoinColumn(name = "patient_id", nullable = false)
+    @JoinColumn(name = "patient_id")
     private Member patient;
 }

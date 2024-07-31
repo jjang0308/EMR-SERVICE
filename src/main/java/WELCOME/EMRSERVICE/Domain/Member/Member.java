@@ -13,7 +13,7 @@ import java.util.List;
 public class Member {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long patient_id;
+    private Long patientId;
     private String patientName;
     private String gender;
     private int age;
@@ -26,8 +26,8 @@ public class Member {
     private String type="app";
 
     @Builder
-    public Member(Long patient_id, String patientName, String gender, int age, int weight, int height, String bloodType, String patientPw, String patientLoginId,String roles) {
-        this.patient_id = patient_id;
+    public Member(Long patientId, String patientName, String gender, int age, int weight, int height, String bloodType, String patientPw, String patientLoginId,String roles) {
+        this.patientId = patientId;
         this.patientName = patientName;
         this.gender = gender;
         this.age = age;

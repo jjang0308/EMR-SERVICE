@@ -12,4 +12,5 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
     boolean existsByDateAndTime(LocalDate date, LocalTime time);
     List<Reservation> findByDoctorDoctorIdAndDate(Long doctorId, LocalDate date);
     List<Reservation> findByDoctorDoctorId(Long doctorId);
+    List<Reservation> findByPatientPatientId(Long patientId);
 }

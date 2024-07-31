@@ -72,4 +72,10 @@ public class ReservationController {
         List<LocalDate> fullyBookedDates = reservationService.getFullyBookedDates(doctorId);
         return ResponseEntity.ok(fullyBookedDates);
     }
+
+    @GetMapping("/patient/{patientId}")
+    public ResponseEntity<List<ReservationDto>> getReservationsByPatientId(@PathVariable Long patientId) {
+        List<ReservationDto> reservations = reservationService.getReservationsByPatientId(patientId);
+        return ResponseEntity.ok(reservations);
+    }
 }

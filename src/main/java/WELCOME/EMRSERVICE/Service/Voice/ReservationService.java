@@ -6,8 +6,6 @@ import WELCOME.EMRSERVICE.Domain.Member.Member;
 import WELCOME.EMRSERVICE.Repository.Doctor.DeptRepository;
 import WELCOME.EMRSERVICE.Repository.Doctor.DoctorRepository;
 import WELCOME.EMRSERVICE.Repository.Member.MemberRepository;
-import WELCOME.EMRSERVICE.Service.Voice.ReservationDto;
-import WELCOME.EMRSERVICE.Service.Voice.ReservationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -38,7 +36,7 @@ public class ReservationService {
     public List<ReservationDto> getAllReservations() {
         List<Reservation> reservations = reservationRepository.findAll();
         return reservations.stream()
-                .map(reservation -> new ReservationDto(reservation.getId(), reservation.getDate(), reservation.getTime(), reservation.getDoctor().getDoctorId()))
+                .map(reservation -> new ReservationDto(reservation.getId(), reservation.getDoctor().getDoctorName(), reservation.getDept().getDeptName(),reservation.getPatient().getPatientName(),reservation.getDate(),reservation.getTime()))
                 .collect(Collectors.toList());
     }
 
@@ -57,7 +55,7 @@ public class ReservationService {
 
         reservation = reservationRepository.save(reservation);
 
-        return new ReservationDto(reservation.getId(), reservation.getDate(), reservation.getTime(), reservation.getDoctor().getDoctorId());
+        return new ReservationDto(reservation.getId(), reservation.getDoctor().getDoctorName(),reservation.getDept().getDeptName(), reservation.getPatient().getPatientName(), reservation.getDate(), reservation.getTime());
     }
 
     public List<LocalTime> getAvailableTimes(Long doctorId, LocalDate date) {
@@ -79,5 +77,23 @@ public class ReservationService {
     public List<LocalDate> getFullyBookedDates(Long doctorId) {
         List<Reservation> reservations = reservationRepository.findByDoctorDoctorId(doctorId);
         return reservations.stream().map(Reservation::getDate).distinct().collect(Collectors.toList());
+    }
+
+    public List<ReservationDto> getReservationsByPatientId(Long patientId) {
+        List<Reservation> reservations = reservationRepository.findByPatientPatientId(patientId);
+        return reservations.stream()
+                .map(this::convertToDto)
+                .collect(Collectors.toList());
+    }
+
+    private ReservationDto convertToDto(Reservation reservation) {
+        return new ReservationDto(
+                reservation.getId(),
+                reservation.getDoctor().getDoctorName(),
+                reservation.getDept().getDeptName(),
+                reservation.getPatient().getPatientName(),
+                reservation.getDate(),
+                reservation.getTime()
+        );
     }
 }
