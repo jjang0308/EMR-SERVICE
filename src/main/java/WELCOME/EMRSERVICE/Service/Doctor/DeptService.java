@@ -2,6 +2,9 @@ package WELCOME.EMRSERVICE.Service.Doctor;
 
 import WELCOME.EMRSERVICE.Domain.Doctor.Dept;
 import WELCOME.EMRSERVICE.Repository.Doctor.DeptRepository;
+import WELCOME.EMRSERVICE.Domain.Doctor.Doctor;
+import WELCOME.EMRSERVICE.Repository.Doctor.DeptRepository;
+import WELCOME.EMRSERVICE.Repository.Doctor.DoctorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

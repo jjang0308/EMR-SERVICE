@@ -71,7 +71,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .cors().and()
                 .csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()).and()
                 .authorizeRequests()
-                .antMatchers("/api/csrf-token", "/api/doctor/signup", "/api/member/signup", "/api/member/login","/api/doctor/login").permitAll()
+                .antMatchers("/api/csrf-token", "/api/doctor/signup", "/api/member/signup", "/api/member/login","/api/doctor/login","/api/doctor/departments").permitAll()
                 .antMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
                 .antMatchers("/appointments/doctor").hasRole("DOCTOR")
                 .antMatchers("/doctor/**").hasRole("DOCTOR")
