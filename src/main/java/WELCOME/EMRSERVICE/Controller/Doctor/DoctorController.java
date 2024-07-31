@@ -2,6 +2,7 @@ package WELCOME.EMRSERVICE.Controller.Doctor;
 
 import WELCOME.EMRSERVICE.Config.JwtTokenUtil;
 import WELCOME.EMRSERVICE.Domain.Doctor.Dept;
+import WELCOME.EMRSERVICE.Domain.Doctor.Doctor;
 import WELCOME.EMRSERVICE.Dto.Doctor.DoctorDto;
 import WELCOME.EMRSERVICE.Repository.Doctor.DeptRepository;
 import WELCOME.EMRSERVICE.Service.Doctor.DeptService;
@@ -51,6 +52,12 @@ public class DoctorController {
     public ResponseEntity<List<Dept>> getDepartments() {
         List<Dept> dept = deptService.getAllDepts();
         return ResponseEntity.ok(dept);
+    }
+
+    @GetMapping("/doctors")
+    public ResponseEntity<List<Doctor>> getDoctorsByDepartment(@RequestParam String department) {
+        List<Doctor> doctors = doctorService.getDoctorsByDepartmentName(department);
+        return ResponseEntity.ok(doctors);
     }
 
     @PostMapping("/login")

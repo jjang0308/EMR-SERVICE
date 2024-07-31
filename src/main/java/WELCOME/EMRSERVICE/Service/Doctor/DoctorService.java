@@ -18,6 +18,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.List;
 
 @Service
 public class DoctorService implements UserDetailsService {
@@ -103,4 +104,8 @@ public class DoctorService implements UserDetailsService {
 
         doctorRepository.delete(doctorEntity);
     }
+    public List<Doctor> getDoctorsByDepartmentName(String deptName) {
+        return doctorRepository.findByDept_DeptName(deptName);
+    }
+
 }

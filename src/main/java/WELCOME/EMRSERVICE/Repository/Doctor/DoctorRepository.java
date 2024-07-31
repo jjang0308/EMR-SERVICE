@@ -7,6 +7,6 @@ import java.util.List;
 
 public interface DoctorRepository extends JpaRepository<Doctor, Long> { // Ensure the primary key type matches
         Doctor findByDoctorLoginId(String doctorLoginId);
-        List<Doctor> findByDept_DeptId(Long deptId);
+        List<Doctor> findByDept_DeptName(String deptName);
         boolean existsByDoctorLoginId(String doctorLoginId);
 }

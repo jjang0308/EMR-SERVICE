@@ -1,6 +1,5 @@
 package WELCOME.EMRSERVICE.Domain.Member;
 
-import WELCOME.EMRSERVICE.Domain.Appointment.Appointment;
 import WELCOME.EMRSERVICE.Domain.Registration.Registration;
 import WELCOME.EMRSERVICE.Dto.Member.MemberDto;
 import lombok.*;
@@ -53,7 +52,5 @@ public class Member {
         this.patientPw = newPassword;
     }
 
-    @OneToMany(mappedBy = "patient")
-    private List<Appointment> appointments;
 
 }

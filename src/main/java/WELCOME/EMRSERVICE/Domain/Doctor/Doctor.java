@@ -1,6 +1,5 @@
 package WELCOME.EMRSERVICE.Domain.Doctor;
 
-import WELCOME.EMRSERVICE.Domain.Appointment.Appointment;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.*;
 
@@ -34,9 +33,6 @@ public class Doctor {
         this.roles = roles;
         this.dept = dept;
     }
-
-    @OneToMany(mappedBy = "doctor")
-    private List<Appointment> appointments;
 
     public void updatePassword(String newPassword) {
         this.doctorPw = newPassword;
