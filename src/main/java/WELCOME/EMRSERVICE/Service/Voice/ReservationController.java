@@ -1,7 +1,5 @@
 package WELCOME.EMRSERVICE.Service.Voice;
 
-import WELCOME.EMRSERVICE.Service.Voice.ReservationDto;
-import WELCOME.EMRSERVICE.Service.Voice.ReservationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;

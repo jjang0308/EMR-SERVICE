@@ -3,6 +3,7 @@ package WELCOME.EMRSERVICE.Controller.Member;
 import WELCOME.EMRSERVICE.Config.JwtTokenUtil;
 import WELCOME.EMRSERVICE.Domain.Member.Member;
 import WELCOME.EMRSERVICE.Dto.Member.MemberDto;
+import WELCOME.EMRSERVICE.Repository.Member.MemberRepository;
 import WELCOME.EMRSERVICE.Service.Member.MemberService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,7 @@ public class MemberController {
 
     private AuthenticationManager authenticationManager;
     private final MemberService memberService;
+    private final MemberRepository memberRepository;
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
 
@@ -132,6 +134,16 @@ public class MemberController {
             return ResponseEntity.ok("Member deleted successfully");
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/patient-id")
+    public ResponseEntity<Long> getPatientId(@RequestParam String loginId) {
+        Member member = memberRepository.findByPatientLoginId(loginId);
+        if (member != null) {
+            return ResponseEntity.ok(member.getPatientId());
+        } else {
+            return ResponseEntity.notFound().build();
         }
     }
 }
