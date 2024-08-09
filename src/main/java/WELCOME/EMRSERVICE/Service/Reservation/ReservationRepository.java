@@ -1,5 +1,7 @@
-package WELCOME.EMRSERVICE.Service.Voice;
+package WELCOME.EMRSERVICE.Service.Reservation;
 
+import WELCOME.EMRSERVICE.Domain.Doctor.Doctor;
+import WELCOME.EMRSERVICE.Domain.Member.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -12,5 +14,7 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
     boolean existsByDateAndTime(LocalDate date, LocalTime time);
     List<Reservation> findByDoctorDoctorIdAndDate(Long doctorId, LocalDate date);
     List<Reservation> findByDoctorDoctorId(Long doctorId);
-    List<Reservation> findByPatientPatientId(Long patientId);
+    List<Reservation> findByMemberPatientId(Long patientId);
+    List<Reservation> findByDoctor(Doctor doctor);
+    List<Reservation> findByMember(Member member);
 }

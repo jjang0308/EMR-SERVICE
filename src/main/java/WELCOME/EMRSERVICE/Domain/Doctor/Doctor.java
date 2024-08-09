@@ -6,8 +6,9 @@ import lombok.*;
 import javax.persistence.*;
 import java.util.List;
 
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Getter @Setter
+//@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Getter
+@Setter
 @Entity(name = "doctor")
 public class Doctor {
     @Id
@@ -33,6 +34,8 @@ public class Doctor {
         this.roles = roles;
         this.dept = dept;
     }
+
+    public Doctor() {}
 
     public void updatePassword(String newPassword) {
         this.doctorPw = newPassword;

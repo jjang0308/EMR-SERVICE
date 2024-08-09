@@ -3,8 +3,10 @@ package WELCOME.EMRSERVICE.Controller.Doctor;
 import WELCOME.EMRSERVICE.Config.JwtTokenUtil;
 import WELCOME.EMRSERVICE.Domain.Doctor.Dept;
 import WELCOME.EMRSERVICE.Domain.Doctor.Doctor;
+import WELCOME.EMRSERVICE.Domain.Member.Member;
 import WELCOME.EMRSERVICE.Dto.Doctor.DoctorDto;
 import WELCOME.EMRSERVICE.Repository.Doctor.DeptRepository;
+import WELCOME.EMRSERVICE.Repository.Doctor.DoctorRepository;
 import WELCOME.EMRSERVICE.Service.Doctor.DeptService;
 import WELCOME.EMRSERVICE.Service.Doctor.DoctorService;
 import lombok.AllArgsConstructor;
@@ -37,10 +39,8 @@ public class DoctorController {
 
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
-    @GetMapping("/dashboard")
-    public ResponseEntity<String> dashboard() {
-        return ResponseEntity.ok("Doctor Dashboard");
-    }
+    @Autowired
+    private DoctorRepository doctorRepository;
 
     @PostMapping("/signup")
     public ResponseEntity<String> signup(@RequestBody DoctorDto doctorDto) {
@@ -131,6 +131,16 @@ public class DoctorController {
             return ResponseEntity.ok("Doctor account deleted successfully");
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/doctor-id")
+    public ResponseEntity<Long> getDoctorId(@RequestParam String loginId) {
+        Doctor doctor = doctorRepository.findByDoctorLoginId(loginId);
+        if (doctor != null) {
+            return ResponseEntity.ok(doctor.getDoctorId());
+        } else {
+            return ResponseEntity.notFound().build();
         }
     }
 }
