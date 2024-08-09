@@ -1,5 +1,6 @@
-package WELCOME.EMRSERVICE.Service.Voice;
+package WELCOME.EMRSERVICE.Service.Reservation;
 
+import WELCOME.EMRSERVICE.Domain.Doctor.Doctor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
@@ -76,4 +77,23 @@ public class ReservationController {
         List<ReservationDto> reservations = reservationService.getReservationsByPatientId(patientId);
         return ResponseEntity.ok(reservations);
     }
+    @GetMapping("/doctor/{doctorId}")
+    public ResponseEntity<List<ReservationDto>> getReservationsByDoctorId(@PathVariable Long doctorId) {
+        List<ReservationDto> reservations = reservationService.getReservationsByDoctorId(doctorId);
+        return ResponseEntity.ok(reservations);
+    }
+
+    @GetMapping("/doctor/confirm/{doctorId}")
+    public List<Reservation> getReservationsFindByDoctorId(@PathVariable Long doctorId) {
+        Doctor doctor = new Doctor();
+        doctor.setDoctorId(doctorId); // 의사 객체에 ID 설정
+        return reservationService.getReservationsByDoctor(doctor);
+    }
+
+    @GetMapping("/{reservationId}")
+    public ResponseEntity<ReservationDto> getReservationById(@PathVariable Long reservationId) {
+        ReservationDto reservationDto = reservationService.getReservationById(reservationId);
+        return ResponseEntity.ok(reservationDto);
+    }
+
 }

@@ -1,4 +1,4 @@
-package WELCOME.EMRSERVICE.Service.Voice;
+package WELCOME.EMRSERVICE.Service.Reservation;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

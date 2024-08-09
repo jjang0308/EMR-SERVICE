@@ -7,7 +7,7 @@ import lombok.*;
 import javax.persistence.*;
 import java.util.List;
 
-@NoArgsConstructor(access= AccessLevel.PROTECTED)
+//@NoArgsConstructor(access= AccessLevel.PROTECTED)
 @Getter @Setter
 @Entity(name = "patient")
 public class Member {
@@ -46,6 +46,7 @@ public class Member {
         this.type=type;
         this.roles="ROLE_MEMBER";
     }
+    public  Member(){}
     @OneToMany(mappedBy = "patient")
     private List<Registration> registration;
     public void updatePassword(String newPassword) {

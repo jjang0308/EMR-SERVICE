@@ -1,4 +1,4 @@
-package WELCOME.EMRSERVICE.Service.Voice;
+package WELCOME.EMRSERVICE.Service.Reservation;
 
 import WELCOME.EMRSERVICE.Domain.Doctor.Dept;
 import WELCOME.EMRSERVICE.Domain.Doctor.Doctor;
@@ -36,18 +36,20 @@ public class ReservationService {
     public List<ReservationDto> getAllReservations() {
         List<Reservation> reservations = reservationRepository.findAll();
         return reservations.stream()
-                .map(reservation -> new ReservationDto(reservation.getId(), reservation.getDoctor().getDoctorName(), reservation.getDept().getDeptName(),reservation.getPatient().getPatientName(),reservation.getDate(),reservation.getTime()))
+                .map(this::convertToDto)
                 .collect(Collectors.toList());
     }
 
     public ReservationDto createReservation(Long doctorId, Long patientId, LocalDate date, LocalTime time) {
-        Doctor doctor = doctorRepository.findById(doctorId).orElseThrow(() -> new IllegalArgumentException("Invalid doctor ID"));
-        Member patient = memberRepository.findById(patientId).orElseThrow(() -> new IllegalArgumentException("Invalid patient ID"));
+        Doctor doctor = doctorRepository.findById(doctorId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid doctor ID"));
+        Member member = memberRepository.findById(patientId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid patient ID"));
         Dept dept = doctor.getDept();
 
         Reservation reservation = Reservation.builder()
                 .doctor(doctor)
-                .patient(patient)
+                .member(member)
                 .dept(dept)
                 .date(date)
                 .time(time)
@@ -55,12 +57,21 @@ public class ReservationService {
 
         reservation = reservationRepository.save(reservation);
 
-        return new ReservationDto(reservation.getId(), reservation.getDoctor().getDoctorName(),reservation.getDept().getDeptName(), reservation.getPatient().getPatientName(), reservation.getDate(), reservation.getTime());
+        return convertToDto(reservation);  // DTO로 변환하여 반환
+    }
+
+    public ReservationDto getReservationDtoById(Long reservationId) {
+        Reservation reservation = reservationRepository.findById(reservationId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid reservation ID: " + reservationId));
+
+        return convertToDto(reservation);  // DTO로 변환하여 반환
     }
 
     public List<LocalTime> getAvailableTimes(Long doctorId, LocalDate date) {
         List<Reservation> reservations = reservationRepository.findByDoctorDoctorIdAndDate(doctorId, date);
-        List<LocalTime> bookedTimes = reservations.stream().map(Reservation::getTime).collect(Collectors.toList());
+        List<LocalTime> bookedTimes = reservations.stream()
+                .map(Reservation::getTime)
+                .collect(Collectors.toList());
 
         List<LocalTime> allTimes = List.of(
                 LocalTime.of(9, 0), LocalTime.of(9, 30),
@@ -71,27 +82,61 @@ public class ReservationService {
                 LocalTime.of(16, 0), LocalTime.of(16, 30)
         );
 
-        return allTimes.stream().filter(time -> !bookedTimes.contains(time)).collect(Collectors.toList());
+        return allTimes.stream()
+                .filter(time -> !bookedTimes.contains(time))
+                .collect(Collectors.toList());
     }
 
     public List<LocalDate> getFullyBookedDates(Long doctorId) {
         List<Reservation> reservations = reservationRepository.findByDoctorDoctorId(doctorId);
-        return reservations.stream().map(Reservation::getDate).distinct().collect(Collectors.toList());
+        return reservations.stream()
+                .map(Reservation::getDate)
+                .distinct()
+                .collect(Collectors.toList());
     }
 
     public List<ReservationDto> getReservationsByPatientId(Long patientId) {
-        List<Reservation> reservations = reservationRepository.findByPatientPatientId(patientId);
+        List<Reservation> reservations = reservationRepository.findByMemberPatientId(patientId);
         return reservations.stream()
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
     }
 
+    public List<ReservationDto> getReservationsByDoctorId(Long doctorId) {
+        List<Reservation> reservations = reservationRepository.findByDoctorDoctorId(doctorId);
+        return reservations.stream()
+                .map(this::convertToDto)
+                .collect(Collectors.toList());
+    }
+
+    public ReservationDto getReservationById(Long reservationId) {
+        Reservation reservation = reservationRepository.findById(reservationId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid reservation ID: " + reservationId));
+
+        return convertToDto(reservation);
+    }
+
+    public List<Reservation> getReservationsByDoctor(Doctor doctor) {
+        return reservationRepository.findByDoctor(doctor);
+    }
+
+    public List<Reservation> getReservationsByPatient(Member patient) {
+        return reservationRepository.findByMember(patient);
+    }
+
+    public Reservation getReservationEntityById(Long reservationId) {
+        return reservationRepository.findById(reservationId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid reservation ID: " + reservationId));
+    }
+
     private ReservationDto convertToDto(Reservation reservation) {
         return new ReservationDto(
-                reservation.getId(),
+                reservation.getReservationId(),
+                reservation.getDoctor().getDoctorId(),
                 reservation.getDoctor().getDoctorName(),
                 reservation.getDept().getDeptName(),
-                reservation.getPatient().getPatientName(),
+                reservation.getMember().getPatientId(),
+                reservation.getMember().getPatientName(),
                 reservation.getDate(),
                 reservation.getTime()
         );
