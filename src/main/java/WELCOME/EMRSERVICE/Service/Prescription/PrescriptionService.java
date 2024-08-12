@@ -66,6 +66,13 @@ public class PrescriptionService {
                 .collect(Collectors.toList());
     }
 
+    public List<PrescriptionDto> getPrescriptionsByReservationId(Long reservationId) {
+        List<Prescription> prescriptions = prescriptionRepository.findByReservationReservationId(reservationId);
+        return prescriptions.stream()
+                .map(this::convertToDto)
+                .collect(Collectors.toList());
+    }
+
     private PrescriptionDto convertToDto(Prescription prescription) {
         return new PrescriptionDto(
                 prescription.getPrescriptionId(),
