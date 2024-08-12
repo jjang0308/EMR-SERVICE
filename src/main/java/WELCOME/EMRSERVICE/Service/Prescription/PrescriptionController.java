@@ -46,6 +46,13 @@ public class PrescriptionController {
         member.setPatientId(patientId); // Member 엔터티의 ID를 설정
         return prescriptionService.getPrescriptionsByMember(member);
     }
+
+    // 예약 ID로 처방전 조회
+    @GetMapping("/reservation/{reservationId}")
+    public ResponseEntity<List<PrescriptionDto>> getPrescriptionsByReservationId(@PathVariable Long reservationId) {
+        List<PrescriptionDto> prescriptions = prescriptionService.getPrescriptionsByReservationId(reservationId);
+        return ResponseEntity.ok(prescriptions);
+    }
 }
 
 
