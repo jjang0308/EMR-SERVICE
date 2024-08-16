@@ -53,6 +53,25 @@ public class PrescriptionController {
         List<PrescriptionDto> prescriptions = prescriptionService.getPrescriptionsByReservationId(reservationId);
         return ResponseEntity.ok(prescriptions);
     }
+
+    @GetMapping("/status/{reservationId}")
+    public ResponseEntity<Boolean> checkPrescriptionStatus(@PathVariable Long reservationId) {
+        boolean isPrescribed = prescriptionService.isPrescriptionCompleted(reservationId);
+        return ResponseEntity.ok(isPrescribed);
+    }
+
+    @PutMapping("/update/{reservationId}")
+    public ResponseEntity<PrescriptionDto> updatePrescription(
+            @PathVariable Long reservationId,
+            @RequestBody PrescriptionDto prescriptionDto) {
+
+        PrescriptionDto updatedPrescription = prescriptionService.updatePrescription(reservationId, prescriptionDto);
+        if (updatedPrescription != null) {
+            return ResponseEntity.ok(updatedPrescription);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
 }
 
 

@@ -1,5 +1,7 @@
 package WELCOME.EMRSERVICE.Service.Prescription;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -24,6 +26,19 @@ public class PrescriptionDto {
         this.prescriptionId = id;
         this.doctorId = doctorId;
         this.patientId = patientId;
+        this.medication = medication;
+        this.dosage = dosage;
+        this.instructions = instructions;
+        this.date = date;
+    }
+    @JsonCreator
+    public PrescriptionDto(
+            @JsonProperty("id") Long prescriptionId,
+            @JsonProperty("medication") String medication,
+            @JsonProperty("dosage") String dosage,
+            @JsonProperty("instructions") String instructions,
+            @JsonProperty("date") LocalDateTime date) {
+        this.prescriptionId = prescriptionId;
         this.medication = medication;
         this.dosage = dosage;
         this.instructions = instructions;
