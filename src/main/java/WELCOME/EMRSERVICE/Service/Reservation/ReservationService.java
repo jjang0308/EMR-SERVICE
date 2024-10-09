@@ -129,6 +129,16 @@ public class ReservationService {
                 .orElseThrow(() -> new IllegalArgumentException("Invalid reservation ID: " + reservationId));
     }
 
+    public List<ReservationDto> getReservationsByDoctorAndDate(Long doctorId, LocalDate date) {
+        // 의사 ID와 날짜로 예약된 환자 목록 조회
+        List<Reservation> reservations = reservationRepository.findByDoctorDoctorIdAndDate(doctorId, date);
+
+        // DTO로 변환하여 반환
+        return reservations.stream()
+                .map(this::convertToDto)
+                .collect(Collectors.toList());
+    }
+
     private ReservationDto convertToDto(Reservation reservation) {
         return new ReservationDto(
                 reservation.getReservationId(),
