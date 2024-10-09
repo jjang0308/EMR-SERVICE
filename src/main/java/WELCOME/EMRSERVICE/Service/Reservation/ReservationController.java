@@ -96,4 +96,13 @@ public class ReservationController {
         return ResponseEntity.ok(reservationDto);
     }
 
+    @GetMapping("/doctor/{doctorId}/date")
+    public ResponseEntity<List<ReservationDto>> getReservationsByDoctorAndDate(
+            @PathVariable Long doctorId,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+        // 의사 ID와 날짜로 예약된 환자 목록 조회
+        List<ReservationDto> reservations = reservationService.getReservationsByDoctorAndDate(doctorId, date);
+        return ResponseEntity.ok(reservations);
+    }
+
 }
