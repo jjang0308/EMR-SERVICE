@@ -35,16 +35,6 @@ public class MemberController {
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
 
-    @GetMapping("/")
-    public ResponseEntity<String> index() {
-        return ResponseEntity.ok("Welcome to the Home Page");
-    }
-
-    @GetMapping("/choiceMember")
-    public ResponseEntity<String> choiceMember() {
-        return ResponseEntity.ok("Choice Member Signup Page");
-    }
-
     @PostMapping("/signup")
     public ResponseEntity<String> signup(@RequestBody Member member) {
         try {
@@ -53,12 +43,6 @@ public class MemberController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("회원가입 중 오류가 발생했습니다.");
         }
-    }
-
-
-    @GetMapping("/dashboard")
-    public ResponseEntity<String> dashboard() {
-        return ResponseEntity.ok("Member Dashboard");
     }
 
     @PostMapping("/login")
@@ -84,20 +68,8 @@ public class MemberController {
         }
     }
 
-
-
-
-
-    @GetMapping("/updatePassword")
-    public ResponseEntity<String> updatePasswordForm() {
-        return ResponseEntity.ok("Update Password Page");
-    }
-
     @PostMapping("/updatePassword")
-    public ResponseEntity<String> updatePassword(@RequestBody MemberDto memberDto,
-                                                 @RequestParam("currentPassword") String currentPassword,
-                                                 @RequestParam("newPassword") String newPassword,
-                                                 @RequestParam("confirmPassword") String confirmPassword) {
+    public ResponseEntity<String> updatePassword(@RequestBody MemberDto memberDto) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         if (authentication == null || !authentication.isAuthenticated()) {
@@ -114,7 +86,8 @@ public class MemberController {
         }
 
         try {
-            memberService.modify(loginId, currentPassword, newPassword, confirmPassword);
+            // 현재 비밀번호, 새 비밀번호, 확인 비밀번호는 MemberDto의 필드를 사용
+            memberService.modify(loginId, memberDto.getPatientPw(), memberDto.getNewPassword(), memberDto.getConfirmPassword());
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
@@ -122,20 +95,37 @@ public class MemberController {
         return ResponseEntity.ok("Password updated successfully");
     }
 
-    @GetMapping("/delete")
-    public ResponseEntity<String> deleteForm() {
-        return ResponseEntity.ok("Delete Member Page");
-    }
 
     @PostMapping("/delete")
-    public ResponseEntity<String> deleteMember(@RequestParam("password") String password) {
+    public ResponseEntity<String> deleteMember(@RequestBody Map<String, String> requestBody) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User is not authenticated");
+        }
+
+        Object principal = authentication.getPrincipal();
+        String loginId;
+
+        if (principal instanceof UserDetails) {
+            loginId = ((UserDetails) principal).getUsername();
+        } else {
+            loginId = principal.toString();
+        }
+
+        String password = requestBody.get("password");
+
         try {
-            memberService.deleteMember(password);
-            return ResponseEntity.ok("Member deleted successfully");
+            // 비밀번호 확인 후 탈퇴 처리
+            memberService.deleteMember(loginId, password);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
+
+        return ResponseEntity.ok("Account deleted successfully");
     }
+
+
 
     @GetMapping("/patient-id")
     public ResponseEntity<Long> getPatientId(@RequestParam String loginId) {
@@ -144,6 +134,27 @@ public class MemberController {
             return ResponseEntity.ok(member.getPatientId());
         } else {
             return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<Member> getMyInfo() {
+        // 현재 인증된 사용자의 로그인 ID를 가져옴
+        String patientLoginId = SecurityContextHolder.getContext().getAuthentication().getName();
+        Member member = memberService.findByPatientLoginId(patientLoginId);
+        if (member == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(member);
+    }
+
+    @PutMapping("/update")
+    public ResponseEntity<String> updateMemberInfo(@RequestBody MemberDto memberDto) {
+        try {
+            memberService.updateMember(memberDto);
+            return ResponseEntity.ok("회원 정보가 성공적으로 수정되었습니다.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("회원 정보 수정에 실패했습니다.");
         }
     }
 }

@@ -1,19 +1,12 @@
 package WELCOME.EMRSERVICE.Service.Member;
 
-import WELCOME.EMRSERVICE.Domain.Doctor.Doctor;
 import WELCOME.EMRSERVICE.Domain.Member.Member;
 import WELCOME.EMRSERVICE.Dto.Member.MemberDto;
-import WELCOME.EMRSERVICE.Dto.Registration.RegistrationDto;
 import WELCOME.EMRSERVICE.Repository.Doctor.DoctorRepository;
 import WELCOME.EMRSERVICE.Repository.Member.MemberRepository;
 import WELCOME.EMRSERVICE.Repository.Registration.RegistrationRepository;
-import WELCOME.EMRSERVICE.Service.Doctor.DoctorPrincipalDetails;
-import WELCOME.EMRSERVICE.Service.Role;
 import lombok.AllArgsConstructor;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -21,8 +14,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.Collections;
-import java.util.List;
+
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -30,6 +23,8 @@ public class MemberService implements UserDetailsService {
     private MemberRepository memberRepository;
     private DoctorRepository doctorRepository;
     private RegistrationRepository registrationRepository;
+    @Autowired
+    private BCryptPasswordEncoder passwordEncoder;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -75,29 +70,42 @@ public class MemberService implements UserDetailsService {
         String encPassword = passwordEncoder.encode(newPassword);
         memberEntity.updatePassword(encPassword);
     }
+    public void deleteMember(String loginId, String rawPassword) {
+        // 로그인 ID로 회원 정보 찾기
+        Member member = memberRepository.findByPatientLoginId(loginId);
 
-
-
-
-    @Transactional
-    public void deleteMember(String password) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String loginId = ((UserDetails) authentication.getPrincipal()).getUsername();
-
-        Member memberEntity = memberRepository.findByPatientLoginId(loginId);
-
-        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        if (!passwordEncoder.matches(password, memberEntity.getPatientPw())) {
+        if (member == null) {
+            throw new IllegalArgumentException("회원이 존재하지 않습니다.");
+        }
+        if (!passwordEncoder.matches(rawPassword, member.getPatientPw())) {
             throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
         }
-
-        memberRepository.delete(memberEntity);
+        memberRepository.delete(member);
     }
 
+    public Member findByPatientLoginId(String patientLoginId) {
+        return memberRepository.findByPatientLoginId(patientLoginId);
+    }
 
+    @Transactional
+    public void updateMember(MemberDto memberDto) {
+        // 로그인된 사용자의 ID에 따라 해당 사용자의 정보를 불러옵니다.
+        Optional<Member> optionalMember = memberRepository.findById(memberDto.getPatientId());
 
+        if (optionalMember.isPresent()) {
+            Member member = optionalMember.get();
+            member.setPatientName(memberDto.getPatientName());
+            member.setGender(memberDto.getGender());
+            member.setAge(memberDto.getAge());
+            member.setWeight(memberDto.getWeight());
+            member.setHeight(memberDto.getHeight());
+            member.setBloodType(memberDto.getBloodType());
 
-
-
+            // 변경된 정보를 저장합니다.
+            memberRepository.save(member);
+        } else {
+            throw new RuntimeException("사용자를 찾을 수 없습니다.");
+        }
+    }
 
 }

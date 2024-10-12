@@ -17,6 +17,8 @@ public class MemberDto {
     private int height;
     private String bloodType;
     private String patientPw;
+    private String newPassword;
+    private String confirmPassword;
     private String patientLoginId;
     private String roles;
 
