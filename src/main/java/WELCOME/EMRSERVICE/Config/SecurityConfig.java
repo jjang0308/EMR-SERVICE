@@ -33,7 +33,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final OAuth2SuccessHandler oAuth2SuccessHandler;
 
     @Autowired
-    public SecurityConfig(MemberService memberService, DoctorService doctorService,
+    public SecurityConfig(@Lazy MemberService memberService, DoctorService doctorService,
                           @Lazy DefaultOAuth2UserService oAuth2UserService,
                           @Lazy OAuth2SuccessHandler oAuth2SuccessHandler) {
         this.memberService = memberService;
