@@ -15,8 +15,11 @@ public class DoctorDto {
     private String doctorName;
     private String doctorLoginId;
     private String doctorPw;
+    private String newPassword;  // 새 비밀번호
+    private String confirmPassword;  // 확인용 비밀번호
     private String roles;
-    private Long deptId;  // 부서 ID 추가
+    private Long deptId;
+    private String deptName;
 
     public Doctor toEntity(Dept dept) {
         return Doctor.builder()
@@ -30,13 +33,14 @@ public class DoctorDto {
     }
 
     @Builder
-    public DoctorDto(Long doctorId, String doctorName, String doctorLoginId, String doctorPw, String roles, Long deptId) {
+    public DoctorDto(Long doctorId, String doctorName, String doctorLoginId, String doctorPw, String roles, Long deptId, String deptName) {
         this.doctorId = doctorId;
         this.doctorName = doctorName;
         this.doctorPw = doctorPw;
         this.doctorLoginId = doctorLoginId;
         this.roles = roles;
         this.deptId = deptId;
+        this.deptName = deptName;
     }
 }
 

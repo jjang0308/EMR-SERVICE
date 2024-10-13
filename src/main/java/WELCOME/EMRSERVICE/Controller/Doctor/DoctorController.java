@@ -83,22 +83,70 @@ public class DoctorController {
         }
     }
 
+    @GetMapping("/doctor-id")
+    public ResponseEntity<Long> getDoctorId(@RequestParam String loginId) {
+        Doctor doctor = doctorRepository.findByDoctorLoginId(loginId);
+        if (doctor != null) {
+            return ResponseEntity.ok(doctor.getDoctorId());
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
 
+    @GetMapping("/me")
+    public ResponseEntity<DoctorDto> getDoctorProfile(Authentication authentication) {
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
 
-    @GetMapping("/updatePassword")
-    public ResponseEntity<String> updatePasswordPage() {
-        return ResponseEntity.ok("Update Password Page");
+        String loginId = authentication.getName();
+        DoctorDto doctorDto = doctorService.getDoctorProfileByLoginId(loginId);
+
+        if (doctorDto == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+
+        return ResponseEntity.ok(doctorDto);
+    }
+
+    @PutMapping("/update")
+    public ResponseEntity<String> updateDoctorProfile(@RequestBody DoctorDto doctorDto, Authentication authentication) {
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        String loginId = authentication.getName();
+        try {
+            doctorService.updateDoctorProfile(loginId, doctorDto);  // 정보 수정 서비스 호출
+            return ResponseEntity.ok("의사 정보가 수정되었습니다.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("정보 수정 중 오류가 발생했습니다.");
+        }
     }
 
     @PostMapping("/updatePassword")
-    public ResponseEntity<String> updatePassword(@RequestBody DoctorDto doctorDto,
-                                                 @RequestParam("currentPassword") String currentPassword,
-                                                 @RequestParam("newPassword") String newPassword,
-                                                 @RequestParam("confirmPassword") String confirmPassword) {
+    public ResponseEntity<String> updatePassword(@RequestBody DoctorDto doctorDto, Authentication authentication) {
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User is not authenticated");
+        }
+
+        String loginId = authentication.getName();
+
+        try {
+            doctorService.updatePassword(loginId, doctorDto.getDoctorPw(), doctorDto.getNewPassword());
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+
+        return ResponseEntity.ok("Password updated successfully");
+    }
+
+    @PostMapping("/delete")
+    public ResponseEntity<String> deleteDoctor(@RequestBody Map<String, String> requestBody) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         if (authentication == null || !authentication.isAuthenticated()) {
-            return ResponseEntity.status(401).body("Unauthorized");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User is not authenticated");
         }
 
         Object principal = authentication.getPrincipal();
@@ -110,37 +158,15 @@ public class DoctorController {
             loginId = principal.toString();
         }
 
+        String password = requestBody.get("password");
+
         try {
-            doctorService.modify(loginId, currentPassword, newPassword, confirmPassword);
+            // 비밀번호 확인 후 탈퇴 처리
+            doctorService.deleteDoctor(loginId, password);
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
 
-        return ResponseEntity.ok("Password updated successfully");
-    }
-
-    @GetMapping("/delete")
-    public ResponseEntity<String> deletePage() {
-        return ResponseEntity.ok("Delete Page");
-    }
-
-    @PostMapping("/delete")
-    public ResponseEntity<String> deleteMember(@RequestParam("password") String password) {
-        try {
-            doctorService.deleteDoctor(password);
-            return ResponseEntity.ok("Doctor account deleted successfully");
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
-    }
-
-    @GetMapping("/doctor-id")
-    public ResponseEntity<Long> getDoctorId(@RequestParam String loginId) {
-        Doctor doctor = doctorRepository.findByDoctorLoginId(loginId);
-        if (doctor != null) {
-            return ResponseEntity.ok(doctor.getDoctorId());
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        return ResponseEntity.ok("Account deleted successfully");
     }
 }
