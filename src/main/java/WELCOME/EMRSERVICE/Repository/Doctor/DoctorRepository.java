@@ -9,4 +9,5 @@ public interface DoctorRepository extends JpaRepository<Doctor, Long> { // Ensur
         Doctor findByDoctorLoginId(String doctorLoginId);
         List<Doctor> findByDept_DeptName(String deptName);
         boolean existsByDoctorLoginId(String doctorLoginId);
+
 }

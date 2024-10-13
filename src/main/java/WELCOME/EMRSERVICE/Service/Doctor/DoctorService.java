@@ -107,5 +107,67 @@ public class DoctorService implements UserDetailsService {
     public List<Doctor> getDoctorsByDepartmentName(String deptName) {
         return doctorRepository.findByDept_DeptName(deptName);
     }
+    public DoctorDto getDoctorProfileByLoginId(String loginId) {
+        Doctor doctor = doctorRepository.findByDoctorLoginId(loginId);
+
+        if (doctor == null) {
+            return null;
+        }
+
+        return DoctorDto.builder()
+                .doctorId(doctor.getDoctorId())
+                .doctorName(doctor.getDoctorName())
+                .doctorLoginId(doctor.getDoctorLoginId())
+                .roles(doctor.getRoles())
+                .deptId(doctor.getDept().getDeptId())  // 부서 ID
+                .deptName(doctor.getDept().getDeptName())  // 부서 이름 추가
+                .build();
+    }
+
+    public void updateDoctorProfile(String loginId, DoctorDto doctorDto) {
+        Doctor existingDoctor = doctorRepository.findByDoctorLoginId(loginId);
+
+        if (existingDoctor == null) {
+            throw new IllegalArgumentException("해당 의사를 찾을 수 없습니다.");
+        }
+
+        Dept dept = deptRepository.findById(doctorDto.getDeptId())
+                .orElseThrow(() -> new IllegalArgumentException("부서 정보를 찾을 수 없습니다."));
+
+        // 기존 의사 정보 업데이트
+        existingDoctor.setDoctorName(doctorDto.getDoctorName());
+        existingDoctor.setDoctorPw(doctorDto.getDoctorPw());
+        existingDoctor.setDept(dept);
+        existingDoctor.setRoles(doctorDto.getRoles());
+
+        doctorRepository.save(existingDoctor);
+    }
+
+    public void updatePassword(String doctorLoginId, String currentPassword, String newPassword) {
+        Doctor doctor = doctorRepository.findByDoctorLoginId(doctorLoginId);
+
+        if (doctor == null) {
+            throw new IllegalArgumentException("해당 의사를 찾을 수 없습니다.");
+        }
+
+        if (!passwordEncoder.matches(currentPassword, doctor.getDoctorPw())) {
+            throw new IllegalArgumentException("현재 비밀번호가 일치하지 않습니다.");
+        }
+
+        doctor.setDoctorPw(passwordEncoder.encode(newPassword));
+        doctorRepository.save(doctor);
+    }
+
+    @Transactional
+    public void deleteDoctor(String doctorLoginId, String rawPassword) {
+        Doctor doctor = doctorRepository.findByDoctorLoginId(doctorLoginId);
+        if (doctor == null) {
+            throw new IllegalArgumentException("회원이 존재하지 않습니다.");
+        }
+        if (!passwordEncoder.matches(rawPassword, doctor.getDoctorPw())) {
+            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+        }
+        doctorRepository.delete(doctor);
+    }
 
 }
