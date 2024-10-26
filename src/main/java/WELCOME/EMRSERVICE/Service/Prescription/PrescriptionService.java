@@ -2,13 +2,11 @@ package WELCOME.EMRSERVICE.Service.Prescription;
 
 import WELCOME.EMRSERVICE.Domain.Doctor.Doctor;
 import WELCOME.EMRSERVICE.Domain.Member.Member;
-import WELCOME.EMRSERVICE.Repository.Doctor.DoctorRepository;
-import WELCOME.EMRSERVICE.Repository.Member.MemberRepository;
-import WELCOME.EMRSERVICE.Service.Prescription.Prescription;
-import WELCOME.EMRSERVICE.Service.Prescription.PrescriptionDto;
-import WELCOME.EMRSERVICE.Service.Prescription.PrescriptionRepository;
-import WELCOME.EMRSERVICE.Service.Reservation.Reservation;
-import WELCOME.EMRSERVICE.Service.Reservation.ReservationDto;
+import WELCOME.EMRSERVICE.Domain.Prescription.Prescription;
+import WELCOME.EMRSERVICE.Dto.Prescription.PrescriptionDto;
+import WELCOME.EMRSERVICE.Repository.Prescription.PrescriptionRepository;
+import WELCOME.EMRSERVICE.Domain.Reservation.Reservation;
+import WELCOME.EMRSERVICE.Dto.Reservation.ReservationDto;
 import WELCOME.EMRSERVICE.Service.Reservation.ReservationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;

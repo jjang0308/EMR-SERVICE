@@ -1,9 +1,9 @@
-package WELCOME.EMRSERVICE.Service.Reservation;
+package WELCOME.EMRSERVICE.Domain.Reservation;
 
 import WELCOME.EMRSERVICE.Domain.Doctor.Dept;
 import WELCOME.EMRSERVICE.Domain.Doctor.Doctor;
 import WELCOME.EMRSERVICE.Domain.Member.Member;
-import WELCOME.EMRSERVICE.Service.Prescription.Prescription;
+import WELCOME.EMRSERVICE.Domain.Prescription.Prescription;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

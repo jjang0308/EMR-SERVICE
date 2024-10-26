@@ -1,7 +1,8 @@
-package WELCOME.EMRSERVICE.Service.Reservation;
+package WELCOME.EMRSERVICE.Repository.Reservation;
 
 import WELCOME.EMRSERVICE.Domain.Doctor.Doctor;
 import WELCOME.EMRSERVICE.Domain.Member.Member;
+import WELCOME.EMRSERVICE.Domain.Reservation.Reservation;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
