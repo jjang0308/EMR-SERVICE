@@ -1,7 +1,9 @@
-package WELCOME.EMRSERVICE.Service.Prescription;
+package WELCOME.EMRSERVICE.Controller.Prescription;
 
 import WELCOME.EMRSERVICE.Domain.Member.Member;
-import WELCOME.EMRSERVICE.Service.Reservation.ReservationDto;
+import WELCOME.EMRSERVICE.Dto.Prescription.PrescriptionDto;
+import WELCOME.EMRSERVICE.Service.Prescription.PrescriptionService;
+import WELCOME.EMRSERVICE.Dto.Reservation.ReservationDto;
 import WELCOME.EMRSERVICE.Service.Reservation.ReservationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;

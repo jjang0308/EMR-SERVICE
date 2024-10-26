@@ -1,6 +1,9 @@
-package WELCOME.EMRSERVICE.Service.Reservation;
+package WELCOME.EMRSERVICE.Controller.Reservation;
 
 import WELCOME.EMRSERVICE.Domain.Doctor.Doctor;
+import WELCOME.EMRSERVICE.Domain.Reservation.Reservation;
+import WELCOME.EMRSERVICE.Dto.Reservation.ReservationDto;
+import WELCOME.EMRSERVICE.Service.Reservation.ReservationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;

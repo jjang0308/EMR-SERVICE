@@ -1,4 +1,4 @@
-package WELCOME.EMRSERVICE.Service.Reservation;
+package WELCOME.EMRSERVICE.Dto.Reservation;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

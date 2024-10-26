@@ -1,4 +1,4 @@
-package WELCOME.EMRSERVICE.Service.Prescription;
+package WELCOME.EMRSERVICE.Dto.Prescription;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
