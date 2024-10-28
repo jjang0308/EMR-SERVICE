@@ -57,6 +57,25 @@ public class ReservationController {
         return ResponseEntity.ok(reservationDto);
     }
 
+    @DeleteMapping("/{reservationId}")
+    public ResponseEntity<Void> deleteReservation(@PathVariable Long reservationId) {
+        reservationService.deleteReservation(reservationId);
+        return ResponseEntity.noContent().build();  // 204 No Content 응답 반환
+    }
+
+    @PutMapping("/{reservationId}")
+    public ResponseEntity<ReservationDto> updateReservation(
+            @PathVariable Long reservationId,
+            @RequestParam Long doctorId,
+            @RequestParam Long patientId,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.TIME) LocalTime time) {
+
+        ReservationDto updatedReservation = reservationService.updateReservation(reservationId, doctorId, patientId, date, time);
+        return ResponseEntity.ok(updatedReservation);
+    }
+
+
     @GetMapping("/available-times")
     public ResponseEntity<List<LocalTime>> getAvailableTimes(
             @RequestParam Long doctorId,

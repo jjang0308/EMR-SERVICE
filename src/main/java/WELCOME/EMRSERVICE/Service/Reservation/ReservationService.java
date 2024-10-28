@@ -141,6 +141,33 @@ public class ReservationService {
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
     }
+    public void deleteReservation(Long reservationId) {
+        Reservation reservation = reservationRepository.findById(reservationId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid reservation ID: " + reservationId));
+        reservationRepository.delete(reservation);
+    }
+
+    public ReservationDto updateReservation(Long reservationId, Long doctorId, Long patientId, LocalDate date, LocalTime time) {
+        Reservation reservation = reservationRepository.findById(reservationId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid reservation ID: " + reservationId));
+
+        Doctor doctor = doctorRepository.findById(doctorId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid doctor ID: " + doctorId));
+        Member member = memberRepository.findById(patientId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid patient ID: " + patientId));
+        Dept dept = doctor.getDept();
+
+        reservation.setDoctor(doctor);
+        reservation.setMember(member);
+        reservation.setDept(dept);
+        reservation.setDate(date);
+        reservation.setTime(time);
+
+        reservation = reservationRepository.save(reservation);
+        return convertToDto(reservation);
+    }
+
+
 
     private ReservationDto convertToDto(Reservation reservation) {
         return new ReservationDto(
