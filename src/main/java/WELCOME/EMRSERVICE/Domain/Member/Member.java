@@ -1,6 +1,5 @@
 package WELCOME.EMRSERVICE.Domain.Member;
 
-import WELCOME.EMRSERVICE.Domain.Registration.Registration;
 import WELCOME.EMRSERVICE.Dto.Member.MemberDto;
 import lombok.*;
 
@@ -47,8 +46,6 @@ public class Member {
         this.roles="ROLE_MEMBER";
     }
     public  Member(){}
-    @OneToMany(mappedBy = "patient")
-    private List<Registration> registration;
     public void updatePassword(String newPassword) {
         this.patientPw = newPassword;
     }
