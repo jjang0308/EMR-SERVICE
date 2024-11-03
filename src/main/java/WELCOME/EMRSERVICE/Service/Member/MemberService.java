@@ -4,7 +4,6 @@ import WELCOME.EMRSERVICE.Domain.Member.Member;
 import WELCOME.EMRSERVICE.Dto.Member.MemberDto;
 import WELCOME.EMRSERVICE.Repository.Doctor.DoctorRepository;
 import WELCOME.EMRSERVICE.Repository.Member.MemberRepository;
-import WELCOME.EMRSERVICE.Repository.Registration.RegistrationRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -22,7 +21,6 @@ import java.util.Optional;
 public class MemberService implements UserDetailsService {
     private MemberRepository memberRepository;
     private DoctorRepository doctorRepository;
-    private RegistrationRepository registrationRepository;
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
 
